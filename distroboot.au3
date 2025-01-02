@@ -1,3 +1,7 @@
+#include <InetConstants.au3>
+#include <WinAPIFiles.au3>
+#include <MsgBoxConstants.au3>
+#include <File.au3>
 
 #include <ButtonConstants.au3>
 #include <GUIConstantsEx.au3>
@@ -50,7 +54,7 @@ GUICtrlSetColor(-1, 0xFFFF00)
 GUICtrlSetBkColor(-1, 0x0000FF)
 GUICtrlSetOnEvent(-1, "Label4Click")
 GUICtrlCreateGroup("", -99, -99, 1, 1)
-$TreeView1 = GUICtrlCreateTreeView(8, 104, 481, 217, BitOR($GUI_SS_DEFAULT_TREEVIEW,$TVS_CHECKBOXES,$TVS_TRACKSELECT,$TVS_INFOTIP), BitOR($WS_EX_CLIENTEDGE,$WS_EX_STATICEDGE))
+$TreeView1 = GUICtrlCreateTreeView(8, 104, 481, 217, BitOR($GUI_SS_DEFAULT_TREEVIEW,$TVS_CHECKBOXES,$TVS_TRACKSELECT,$TVS_INFOTIP,$WS_VSCROLL,$WS_BORDER), BitOR($WS_EX_CLIENTEDGE,$WS_EX_STATICEDGE))
 $TreeView1_0 = GUICtrlCreateTreeViewItem("Ubuntu", $TreeView1)
 $TreeView1_1 = GUICtrlCreateTreeViewItem("Kodachi", $TreeView1)
 $TreeView1_2 = GUICtrlCreateTreeViewItem("Kali", $TreeView1)
@@ -74,7 +78,7 @@ Func Checkbox1Click()
 EndFunc
 Func DownloadClick()
 	local $tmp = GUICtrlRead($TreeView1, 1)
-	ConsoleWrite($tmp & @CRLF & GUICtrlRead($TreeView1, 1))
+	ConsoleWrite($tmp & @CRLF)
 EndFunc
 Func Form1_1Close()
 	Exit
@@ -116,5 +120,6 @@ Func TreeView1Click()
 
 EndFunc
 Func Update_distrolistClick()
-
+	If FileExists(@ScriptDir & "\distrolist1.csv") Then FileDelete(@ScriptDir & "\distrolist1.csv")
+	InetGet("https://raw.githubusercontent.com/DimBertolami/Distroboot/refs/heads/main/distrolist.csv", @ScriptDir & "\distrolist.csv")
 EndFunc

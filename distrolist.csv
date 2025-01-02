@@ -1,1 +1,6 @@
-Ubuntu,https://ubuntu.blabla.org/ubuntugnome.iso
+Ubuntu Desktop,https://releases.ubuntu.com/24.04.1/ubuntu-24.04.1-desktop-amd64.iso
+Ubuntu Server,https://releases.ubuntu.com/24.04.1/ubuntu-24.04.1-live-server-amd64.iso
+AlienOS,https://sourceforge.net/projects/alien-os-nano/files/Alien-OS%20Regolith/Alien-OS_Regolith_Prime.iso
+Damn Small Linux (DSL),https://damnsmalllinux.org/download/dsl-2024.rc7.iso
+Endian Firewall,https://sourceforge.net/projects/efw/files/latest/download
+
