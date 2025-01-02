@@ -98,7 +98,7 @@ Func CheckSize()
 #ce
 	if not InetGetInfo($Download, $INET_DOWNLOADCOMPLETE) Then
 		$iBytesSize = round(InetGetInfo($Download, $INET_DOWNLOADREAD)/1024/2024,1)
-		If $iBytesSize < $iFileSize Then
+		If $iBytesSize+1 < $iFileSize Then
 			$fDiff = TimerDiff($Start)/1000
 			;local $speed = $iBytesSize / $fDiff
 			;ProgressOn("Progress Meter", "Increments every second" & @CRLF & "..." , "0%", -1, -1, BitOR($DLG_NOTONTOP, $DLG_MOVEABLE))
