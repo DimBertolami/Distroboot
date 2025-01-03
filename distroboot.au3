@@ -36,8 +36,7 @@ GUICtrlCreateGroup("", -99, -99, 1, 1)
 Global $Download = GUICtrlCreateButton("&Download", 392, 8, 91, 25)
 GUICtrlSetTip($Download, "download selected distro")
 GUICtrlSetOnEvent($Download, "DownloadClick")
-Global $TreeView1 = GUICtrlCreateTreeView(0, 99, 113, 217, BitOR($GUI_SS_DEFAULT_TREEVIEW,$TVS_CHECKBOXES,$TVS_TRACKSELECT,$TVS_INFOTIP,$WS_VSCROLL,$WS_BORDER), BitOR($WS_EX_CLIENTEDGE,$WS_EX_STATICEDGE))
-
+Global $TreeView1 = GUICtrlCreateTreeView(0, 99, 193, 217, BitOR($GUI_SS_DEFAULT_TREEVIEW,$TVS_CHECKBOXES,$TVS_TRACKSELECT,$TVS_INFOTIP,$WS_VSCROLL,$WS_BORDER), BitOR($WS_EX_CLIENTEDGE,$WS_EX_STATICEDGE))
 
 GUICtrlSetTip(-1, "Distrolist")
 Global $Update_distrolist = GUICtrlCreateButton("&Update distrolist", 392, 72, 91, 25)
@@ -51,7 +50,7 @@ Global $Url, $Start, $Name, $iFileSize, $iBytesSize, $fDiff, $Download
 Global $sFilePath  = ""
 Global $sSize = 0
 ; -----------------
-	 SetProgress($Progress1, 123, 105, 150, 12, $Label1, ".", 280, 105, 50, 12, $Label2, ".", 358, 105, 50, 12)
+	 SetProgress($Progress1, 199, 105, 150, 12, $Label1, ".", 365, 105, 50, 12, $Label2, ".", 420, 105, 50, 12)
 ;	 SetProgress($Progress2, 123, 120, 150, 12, $Label3, ".", 280, 122, 50, 12, $Label4, ".", 358, 120, 50, 12)
 ;	 SetProgress($Progress2, 123, 136, 150, 12, $Label5, ".", 280, 135, 50, 12, $Label6, ".", 358, 136, 50, 12)
 ;	 SetProgress($Progress2, 123, 148, 150, 12, $Label7, ".", 280, 148, 50, 12, $Label8, ".", 358, 148, 50, 12)
@@ -138,14 +137,13 @@ Func Update_distrolistClick()
 	For $i = 1 To $lines Step 1
 		$line = FileReadLine(@ScriptDir & "\distrolist.csv", $i)
 		$arrLineSplit = StringSplit($line, ",")
-		If $arrLineSplit[0] <> 0 Then
+;		If $arrLineSplit[0] <> 0 Then
 			$Name = $arrLineSplit[1]
 			GUICtrlCreateTreeViewItem($Name, $TreeView1)
 			$Url = $arrLineSplit[2]
  			$Size = Round($arrLineSplit[3]/1024/1024, 1)
-		EndIf
+;		EndIf
 	Next
-
 EndFunc
 Func QemuRunClick()
 	If Not FileExists("C:\Program Files\qemu\qemu-system-x86_64.exe") Then
@@ -153,28 +151,24 @@ Func QemuRunClick()
 	EndIf
 	Local $tselected = GUICtrlRead($TreeView1, 1)
 	if FileExists(@ScriptDir & "\" & $tselected & ".iso") <> 0 Then																; ISO
-		$strPowerShellCmd  = @ComSpec & ' /c color 9e & cd \progra~1\qemu & "qemu-system-x86_64.exe" -cdrom "' & _
-							 @ScriptDir & "\" & $tselected & '.iso" -m 10G'
-		RunWait($strPowerShellCmd, @ScriptDir, @SW_SHOW, $RUN_CREATE_NEW_CONSOLE)
-		ConsoleWrite($strPowerShellCmd & @CRLF)
+		$strCmd  = 'cd \progra~1\qemu & "qemu-system-x86_64.exe" -cdrom "' & _
+							 @ScriptDir & "\" & $tselected & '.iso" -m 4G'
+		execCommand($strCmd)
 	EndIf
 	if FileExists(@ScriptDir & "\" & $tselected& ".img") <> 0 Then																; IMG
-		$strPowerShellCmd = @ComSpec & ' /c "C:\Program Files\qemu\qemu-system-x86_64.exe" -m 10G -drive file="' & _
-					@ScriptDir & "\" & $tselected & '.img",format=raw,index=0,media=disk -vga virtio -no-reboot'
-		RunWait($strPowerShellCmd, @ScriptDir, @SW_SHOW)
-		ConsoleWrite($strPowerShellCmd & @CRLF)
+		$strCmd = '"C:\Program Files\qemu\qemu-system-x86_64.exe" -m 4G -drive file="' & _
+							@ScriptDir & "\" & $tselected & '.img",format=raw,index=0,media=disk -vga virtio -no-reboot'
+		execCommand($strCmd)
 	EndIf
 	If FileExists(@ScriptDir & "\" & $tselected& ".zip") <> 0 Then															; ZIP FILE
-		$strPowerShellCmd = @ComSpec & '/c PowerShell -Command "Expand-Archive -Path "' & $tselected & '.zip" -DestinationPath ' & _
-							@ScriptDir & ' -Force"'
-		GUICtrlSetData($TreeView1, StringReplace($tselected, StringRight($tselected, 4), ".iso"))
-		RunWait("Running... " & @CRLF & @TAB & $strPowerShellCmd, @ScriptDir, @SW_SHOW)
-		ConsoleWrite($strPowerShellCmd & @CRLF)
+		$strCmd = 'PowerShell -Command "Expand-Archive -Path "' & $tselected & '.zip" -DestinationPath ' & @ScriptDir & ' -Force"'
+		;GUICtrlSetData($TreeView1, StringReplace($tselected, StringRight($tselected, 4), ".iso"))
+		execCommand($strCmd)
 		;FileDelete(@ScriptDir & "\" & $tselected & ".zip")
 	EndIf
 EndFunc
 Func execCommand($cmd)
-	Run(@comspec & " / c " & $cmd, @ScriptDir, @SW_SHOW)
-	ConsoleWrite("command executed: " & @CRLF & @TAB & $cmd & @CRLF)
+	RunWait(@comspec & " /c color 9e & " & $cmd, @ScriptDir, @SW_SHOW)
+	ConsoleWrite("command executed: " & @CRLF & @TAB & @comspec & " / c color 9e & " & $cmd & @CRLF)
 EndFunc
 
