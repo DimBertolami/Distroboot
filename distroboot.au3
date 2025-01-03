@@ -75,12 +75,19 @@ EndFunc
 Func RemoveDistroClick()
 EndFunc
 Func ScanISOsClick()
-	local $hSearch = FileFindFirstFile("*.iso|*.img")
+	local $hSearch = FileFindFirstFile("*.iso")
 	While 1
         local $sFileName = FileFindNextFile($hSearch)
 		If @error Then ExitLoop
-		$iResult = ConsoleWrite("File: " & $sFileName & @CRLF)
-		If $iResult <> $IDOK Then ExitLoop ; If the user clicks on the cancel/close button.
+		ConsoleWrite("File: " & $sFileName & @CRLF)
+	WEnd
+	local $hSearch2 = FileFindFirstFile("*.img")
+	While 1
+        local $sFileName = FileFindNextFile($hSearch2)
+		If @error Then ExitLoop
+		ConsoleWrite("File: " & $sFileName & @CRLF)
+		GUICtrlSetData($TreeView1, "")
+		GUICtrlSetData($TreeView1, $sFileName)
 	WEnd
 EndFunc
 
