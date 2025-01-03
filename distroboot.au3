@@ -14,198 +14,96 @@
 #include <WindowsConstants.au3>
 Opt("GUIOnEventMode", 1)
 #Region ### START Koda GUI section ### Form=c:\scripts\autoit\distroboot.kxf
-$Form1_1 = GUICreate("", 490, 323, 192, 124)
+Global $Form1_1 = GUICreate("", 490, 323, 192, 124)
 GUISetOnEvent($GUI_EVENT_CLOSE, "Form1_1Close")
 GUISetOnEvent($GUI_EVENT_MINIMIZE, "Form1_1Minimize")
 GUISetOnEvent($GUI_EVENT_MAXIMIZE, "Form1_1Maximize")
 GUISetOnEvent($GUI_EVENT_RESTORE, "Form1_1Restore")
-$AddDistro = GUICtrlCreateButton("&Add ISO Image", 0, 8, 83, 89)
-GUICtrlSetOnEvent(-1, "AddDistroClick")
-$RemoveDistro = GUICtrlCreateButton("&Remove ISO Image", 88, 8, 107, 89)
-GUICtrlSetOnEvent(-1, "RemoveDistroClick")
-$ScanISOs = GUICtrlCreateButton("&Scan ISO folder", 200, 8, 91, 89)
-GUICtrlSetOnEvent(-1, "ScanISOsClick")
-$gRamdiskSize = GUICtrlCreateGroup("Ramdisk Size", 296, 3, 89, 94)
-$r4Gb = GUICtrlCreateRadio("4Gb", 304, 19, 49, 17)
-;GUICtrlSetOnEvent(-1, "r4GbClick")
-$r10Gb = GUICtrlCreateRadio("10Gb", 304, 35, 49, 17)
-;GUICtrlSetOnEvent(-1, "r10GbClick")
-$Checkbox1 = GUICtrlCreateCheckbox("Terminal", 304, 67, 97, 17)
-;GUICtrlSetOnEvent(-1, "Checkbox1Click")
+Global $AddDistro = GUICtrlCreateButton("&Add ISO Image", 0, 8, 83, 89)
+GUICtrlSetOnEvent($AddDistro, "AddDistroClick")
+Global $RemoveDistro = GUICtrlCreateButton("&Remove ISO Image", 88, 8, 107, 81)
+GUICtrlSetOnEvent($RemoveDistro, "RemoveDistroClick")
+Global $ScanISOs = GUICtrlCreateButton("&Scan ISO folder", 200, 8, 91, 81)
+GUICtrlSetOnEvent($ScanISOs, "ScanISOsClick")
+Global $gRamdiskSize = GUICtrlCreateGroup("Ramdisk Size", 296, 3, 89, 86)
+Global $r4Gb = GUICtrlCreateRadio("4Gb", 304, 19, 49, 17)
+
+
+; -----------------------------------------------------------------------------------
+Global $r10Gb = GUICtrlCreateRadio("10Gb", 304, 35, 49, 17)
+Global $Checkbox1 = GUICtrlCreateCheckbox("Terminal", 304, 67, 97, 17)
 GUICtrlCreateGroup("", -99, -99, 1, 1)
-$Download = GUICtrlCreateButton("&Download", 392, 8, 91, 25)
-GUICtrlSetTip(-1, "download selected distro")
-GUICtrlSetOnEvent(-1, "DownloadClick")
-$TreeView1 = GUICtrlCreateTreeView(0, 99, 113, 217, BitOR($GUI_SS_DEFAULT_TREEVIEW,$TVS_CHECKBOXES,$TVS_TRACKSELECT,$TVS_INFOTIP,$WS_VSCROLL,$WS_BORDER), BitOR($WS_EX_CLIENTEDGE,$WS_EX_STATICEDGE))
+Global $Download = GUICtrlCreateButton("&Download", 392, 8, 91, 25)
+GUICtrlSetTip($Download, "download selected distro")
+GUICtrlSetOnEvent($Download, "DownloadClick")
+Global $TreeView1 = GUICtrlCreateTreeView(0, 99, 113, 217, BitOR($GUI_SS_DEFAULT_TREEVIEW,$TVS_CHECKBOXES,$TVS_TRACKSELECT,$TVS_INFOTIP,$WS_VSCROLL,$WS_BORDER), BitOR($WS_EX_CLIENTEDGE,$WS_EX_STATICEDGE))
+
+
 GUICtrlSetTip(-1, "Distrolist")
-;GUICtrlSetOnEvent(-1, "TreeView1Click")
-$Update_distrolist = GUICtrlCreateButton("&Update distrolist", 392, 72, 91, 25)
-GUICtrlSetOnEvent(-1, "Update_distrolistClick")
-$QemuRun = GUICtrlCreateButton("run in &Qemu VM", 392, 32, 91, 41)
-GUICtrlSetOnEvent(-1, "QemuRunClick")
-$Progress1 = GUICtrlCreateProgress(136, 110, 150, 12)
-;GUICtrlSetState(-1, $GUI_HIDE)
-$Progress2 = GUICtrlCreateProgress(136, 125, 150, 12)
-;GUICtrlSetState(-1, $GUI_HIDE)
-$Progress3 = GUICtrlCreateProgress(136, 141, 150, 12)
-;GUICtrlSetState(-1, $GUI_HIDE)
-$Progress4 = GUICtrlCreateProgress(136, 156, 158, 12)
-;GUICtrlSetState(-1, $GUI_HIDE)
-$Group1 = GUICtrlCreateGroup("", 118, 93, 361, 225)
-$Label1 = GUICtrlCreateLabel(".", 358, 109, 80, 12)
-GUICtrlSetFont(-1, 10, 800, 0, "MS Sans Serif")
-GUICtrlSetColor(-1, 0xFFFF00)
-GUICtrlSetBkColor(-1, 0x0000FF)
-;GUICtrlSetState(-1, $GUI_HIDE)
-GUICtrlSetTip(-1, "Mb's downloaded")
-;GUICtrlSetOnEvent(-1, "Label1Click")
-$Label2 = GUICtrlCreateLabel(".", 286, 109, 64, 12)
-GUICtrlSetFont(-1, 10, 800, 0, "MS Sans Serif")
-GUICtrlSetColor(-1, 0xFFFF00)
-GUICtrlSetBkColor(-1, 0x0000FF)
-;GUICtrlSetState(-1, $GUI_HIDE)
-GUICtrlSetTip(-1, "Percentage downloaded")
-;GUICtrlSetOnEvent(-1, "Label2Click")
-$Label3 = GUICtrlCreateLabel(".", 358, 122, 80, 12)
-GUICtrlSetFont(-1, 10, 800, 0, "MS Sans Serif")
-GUICtrlSetColor(-1, 0xFFFF00)
-GUICtrlSetBkColor(-1, 0x0000FF)
-;GUICtrlSetState(-1, $GUI_HIDE)
-GUICtrlSetTip(-1, "Mb's downloaded")
-;GUICtrlSetOnEvent(-1, "Label3Click")
-$Label4 = GUICtrlCreateLabel(".", 286, 122, 64, 12)
-GUICtrlSetFont(-1, 10, 800, 0, "MS Sans Serif")
-GUICtrlSetColor(-1, 0xFFFF00)
-GUICtrlSetBkColor(-1, 0x0000FF)
-;GUICtrlSetState(-1, $GUI_HIDE)
-GUICtrlSetTip(-1, "Percentage downloaded")
-;GUICtrlSetOnEvent(-1, "Label4Click")
-$Label5 = GUICtrlCreateLabel(".", 286, 135, 64, 12)
-GUICtrlSetFont(-1, 10, 800, 0, "MS Sans Serif")
-GUICtrlSetColor(-1, 0xFFFF00)
-GUICtrlSetBkColor(-1, 0x0000FF)
-;GUICtrlSetState(-1, $GUI_HIDE)
-GUICtrlSetTip(-1, "Percentage downloaded")
-;GUICtrlSetOnEvent(-1, "Label5Click")
-$Label6 = GUICtrlCreateLabel(".", 358, 135, 80, 12)
-GUICtrlSetFont(-1, 10, 800, 0, "MS Sans Serif")
-GUICtrlSetColor(-1, 0xFFFF00)
-GUICtrlSetBkColor(-1, 0x0000FF)
-;GUICtrlSetState(-1, $GUI_HIDE)
-GUICtrlSetTip(-1, "Mb's downloaded")
-;GUICtrlSetOnEvent(-1, "Label6Click")
-$Label7 = GUICtrlCreateLabel(".", 286, 148, 64, 12)
-GUICtrlSetFont(-1, 10, 800, 0, "MS Sans Serif")
-GUICtrlSetColor(-1, 0xFFFF00)
-GUICtrlSetBkColor(-1, 0x0000FF)
-;GUICtrlSetState(-1, $GUI_HIDE)
-GUICtrlSetTip(-1, "Percentage downloaded")
-;GUICtrlSetOnEvent(-1, "Label7Click")
-$Label8 = GUICtrlCreateLabel(".", 358, 148, 80, 12)
-GUICtrlSetFont(-1, 10, 800, 0, "MS Sans Serif")
-GUICtrlSetColor(-1, 0xFFFF00)
-GUICtrlSetBkColor(-1, 0x0000FF)
-;GUICtrlSetState(-1, $GUI_HIDE)
-GUICtrlSetTip(-1, "Mb's downloaded")
-;GUICtrlSetOnEvent(-1, "Label8Click")
-GUICtrlCreateGroup("", -99, -99, 1, 1)
-GUIStartGroup()
-GUISetState(@SW_SHOW)
-#EndRegion ### END Koda GUI section ###
+Global $Update_distrolist = GUICtrlCreateButton("&Update distrolist", 392, 72, 91, 25)
+GUICtrlSetOnEvent($Update_distrolist, "Update_distrolistClick")
+Global $QemuRun = GUICtrlCreateButton("run in &Qemu VM", 392, 32, 91, 41)
+GUICtrlSetOnEvent($QemuRun, "QemuRunClick")
+Global $Progress1, $Progress2, $Progress3, $Progress4, $Label1, $Label2, $Label3, $Label4, $Label5, $Label6, $Label7, $Label8
+Global $lProg, $pleft, $ptop, $pwidth, $pheight, $lblA, $ltxtA, $lleftA, $ltopA, $lwidthA, $lheightA, $lblB, $ltxtB, $lleftB, $ltopB, $lwidthB, $lheightB
 Global $bIsRunning = False
 Global $Url, $Start, $Name, $iFileSize, $iBytesSize, $fDiff, $Download
-$sFilePath = _WinAPI_GetTempFileName(@TempDir)
+Global $sFilePath  = ""
+Global $sSize = 0
+; -----------------
+	 SetProgress($Progress1, 123, 105, 150, 12, $Label1, ".", 280, 105, 50, 12, $Label2, ".", 358, 105, 50, 12)
+;	 SetProgress($Progress2, 123, 120, 150, 12, $Label3, ".", 280, 122, 50, 12, $Label4, ".", 358, 120, 50, 12)
+;	 SetProgress($Progress2, 123, 136, 150, 12, $Label5, ".", 280, 135, 50, 12, $Label6, ".", 358, 136, 50, 12)
+;	 SetProgress($Progress2, 123, 148, 150, 12, $Label7, ".", 280, 148, 50, 12, $Label8, ".", 358, 148, 50, 12)
+; -----------------
+GUISetState(@SW_SHOW)
+#EndRegion ### END Koda GUI section ###
 Update_distrolistClick()
-Global $sSize
 While 1
-;	Local $sMsg = 0
-;	$sMsg = GUIGetMsg()
 	Sleep(1000)
-;	Select
-;		Case $sMsg = $GUI_EVENT_CLOSE
-;			ExitLoop
-#cs
-		Case $sMsg = $Download
-			;			$bIsRunning = True
-			DownloadClick()
-			$sSize = round($iBytesSize / $iFileSize * 100)
-			Do
-				$iBytesSize = round(InetGetInfo($Download, $INET_DOWNLOADREAD)/1024/2024,1)
-				ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $iBytesSize = ' & $iBytesSize & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
-				If $iBytesSize+7 < $iFileSize Then
-					$fDiff = round(TimerDiff($Start)/1000)
-					GUICtrlSetData($Progress1, round($sSize)+7)
-					GUICtrlSetData($Label1, $iBytesSize & "Mb")
-					GUICtrlSetData($Label2, $sSize & "% in " & $fDiff & " seconds")
-				EndIf
-				Switch $sSize
-					Case 0 To 14
-						GUICtrlSetBkColor($Form1_1, $COLOR_RED)
-					Case 15 To 29
-						GUICtrlSetBkColor($Form1_1, $COLOR_ORANGE)
-					Case 30 To 44
-						GUICtrlSetBkColor($Form1_1, $COLOR_YELLOW)
-					Case 45 To 59
-						GUICtrlSetBkColor($Form1_1, $COLOR_GREEN)
-					Case 60 To 74
-						GUICtrlSetBkColor($Form1_1, $COLOR_BLUE)
-					Case 75 To 89
-						GUICtrlSetBkColor($Form1_1, $COLOR_INDIGO)
-					Case 90 To 100
-						GUICtrlSetBkColor($Form1_1, $COLOR_VIOLET)
-				EndSwitch
-			Until InetGetInfo($Download, $INET_DOWNLOADCOMPLETE)
-			#ce
-
-;			If $sSize>=99 Then
-;				FileMove($sFilePath, @ScriptDir & "\" & $Name & ".iso", $FC_OVERWRITE + $FC_CREATEPATH)
-;			EndIf
-;		EndSelect
-
-;	GUICtrlSetState($Progress1, $GUI_SHOW)
-;	GUICtrlSetState($Label4, $GUI_SHOW)
-;	GUICtrlSetState($Label2, $GUI_SHOW)
-;	GUICtrlSetState($Progress2, $GUI_SHOW)
-;	GUICtrlSetState($Label3, $GUI_SHOW)
-;	GUICtrlSetState($Label4, $GUI_SHOW)
-;	GUICtrlSetState($Progress3, $GUI_SHOW)
-;	GUICtrlSetState($Label5, $GUI_SHOW)
-;	GUICtrlSetState($Label6, $GUI_SHOW)
-;	GUICtrlSetState($Progress4, $GUI_SHOW)
-;	GUICtrlSetState($Label7, $GUI_SHOW)
-;	GUICtrlSetState($Label8, $GUI_SHOW)
-;	Select
-;		Case $bIsRunning
-;		Case Else
-;	EndSelect
 WEnd
 
 Func AddDistroClick()
-
 EndFunc
 Func Checkbox1Click()
-
 EndFunc
-Func CheckSize($i, $Name, $sFilePath, $Url, $iFileSize, $Download)
-	$bIsRunning = True
-	if not InetGetInfo($Download, $INET_DOWNLOADCOMPLETE) Then
-		$iBytesSize = round(InetGetInfo($Download, $INET_DOWNLOADREAD)/1024/2024,1)
-		$sSize = round($iBytesSize / $iFileSize * 100)
-		If $iBytesSize+7 < $iFileSize Then
-			$fDiff = round(TimerDiff($Start)/1000)
-			GUICtrlSetData($Progress1, round($sSize)+7)
-			GUICtrlSetData($Label1, $iBytesSize & "Mb")
-			GUICtrlSetData($Label2, $sSize & "%")
-		EndIf
-		If $sSize>=99 Then
-			FileMove($sFilePath, @ScriptDir & "\" & $Name & ".iso", $FC_OVERWRITE + $FC_CREATEPATH)
-		EndIf
-	EndIf
+Func Form1_1Maximize()
+EndFunc
+Func Form1_1Minimize()
+EndFunc
+Func Form1_1Restore()
+EndFunc
+Func RemoveDistroClick()
+EndFunc
+Func ScanISOsClick()
+	local $hSearch = FileFindFirstFile("*.iso|*.img")
+	While 1
+        local $sFileName = FileFindNextFile($hSearch)
+		If @error Then ExitLoop
+		$iResult = ConsoleWrite("File: " & $sFileName & @CRLF)
+		If $iResult <> $IDOK Then ExitLoop ; If the user clicks on the cancel/close button.
+	WEnd
+EndFunc
 
-$bIsRunning = False
+
+Func SetProgress($lProg, $pleft, $ptop, $pwidth, $pheight, $lblA, _
+				 $ltxtA, $lleftA, $ltopA, $lwidthA, $lheightA, _
+				 $lblB, $ltxtB, $lleftB, $ltopB, $lwidthB, $lheightB)
+	$lProg= GUICtrlCreateProgress($pleft, $ptop, $pwidth, $pheight)
+	GUIctrlSetState(-1, @SW_UNLOCK)
+	$lblA = GUICtrlCreateLabel($ltxtA, $lleftA, $ltopA, $lwidthA, $lheightA)
+	GUICtrlSetFont($lblA, 10, 800, 0, "MS Sans Serif")
+	GUICtrlSetColor($lblA, 0xFFFF00)
+	GUICtrlSetBkColor($lblA, 0x0000FF)
+	GUICtrlSetTip($lblA, "Mb's downloaded")
+	$lblB = GUICtrlCreateLabel($ltxtB, $lleftB, $ltopB, $lwidthB, $lheightB)
+	GUICtrlSetFont($lblB, 10, 800, 0, "MS Sans Serif")
+	GUICtrlSetColor($lblB, 0xFFFF00)
+	GUICtrlSetBkColor($lblB, 0x0000FF)
+	GUICtrlSetTip($lblB, "Percentage downloaded")
 EndFunc
 Func DownloadClick()
-	$Start = TimerInit()
+	$sFilePath = _WinAPI_GetTempFileName(@TempDir)
 	local $tmp = GUICtrlRead($TreeView1, 1)
 	$lines = _FileCountLines ( @ScriptDir & "\distrolist.csv" )
 	For $i = 1 To $lines Step 1
@@ -213,60 +111,30 @@ Func DownloadClick()
 		$arrLineSplit = StringSplit($line, ",", 2)
 		$Name = $arrLineSplit[0]
 		If $Name=$tmp Then
-			$sFilePath = _WinAPI_GetTempFileName(@TempDir)
 			$Url = $arrLineSplit[1]
-			$iFileSize = round($arrLineSplit[2]/1024/2024,1)
-			$Download = InetGet($Url, $sFilePath, $INET_FORCERELOAD, $INET_DOWNLOADBACKGROUND)
-			CheckSize($i, $Name, $sFilePath, $Url, $iFileSize, $Download)
+			$iFileSize = round($arrLineSplit[2]/1024/2024) & "Mb"
+			$Download = InetGet($Url, $sFilePath, $INET_BINARYTRANSFER, $INET_DOWNLOADBACKGROUND)
+			Do
+				$iBytesSize = round(InetGetInfo($Download, $INET_DOWNLOADREAD)/1024/2024)
+				GUICtrlSetData($Progress1, round($sSize))
+				GUICtrlSetData($Label1, $iBytesSize & "Mb")
+				GUICtrlSetData($Label2, $sSize & "%")
+				Sleep(500)
+			Until InetGetInfo($Download, $INET_DOWNLOADCOMPLETE)
+			InetClose($Download)
+			FileMove($sFilePath, @ScriptDir & "\" & $Name & ".iso", $FC_OVERWRITE + $FC_CREATEPATH)
 		EndIf
-		InetClose($Download)
 	Next
 EndFunc
 Func Form1_1Close()
 	Exit
 EndFunc
-Func Form1_1Maximize()
 
-EndFunc
-Func Form1_1Minimize()
-
-EndFunc
-Func Form1_1Restore()
-
-EndFunc
-#cs
-Func Label1Click()
-
-EndFunc
-Func Label2Click()
-
-EndFunc
-Func Label3Click()
-
-EndFunc
-Func Label4Click()
-
-EndFunc
-Func r10GbClick()
-
-EndFunc
-Func r4GbClick()
-
-EndFunc
-#ce
-Func RemoveDistroClick()
-
-EndFunc
-Func ScanISOsClick()
-
-EndFunc
-Func TreeView1Click()
-
-EndFunc
 Func Update_distrolistClick()
 	If FileExists(@ScriptDir & "\distrolist1.csv") Then FileDelete(@ScriptDir & "\distrolist1.csv")
 	InetGet("https://raw.githubusercontent.com/DimBertolami/Distroboot/refs/heads/main/distrolist.csv", @ScriptDir & "\distrolist.csv")
 	$lines = _FileCountLines ( @ScriptDir & "\distrolist.csv" )
+	GUICtrlSetData($TreeView1, "")
 	For $i = 1 To $lines Step 1
 		$line = FileReadLine(@ScriptDir & "\distrolist.csv", $i)
 		$arrLineSplit = StringSplit($line, ",")
@@ -277,7 +145,36 @@ Func Update_distrolistClick()
  			$Size = Round($arrLineSplit[3]/1024/1024, 1)
 		EndIf
 	Next
+
 EndFunc
 Func QemuRunClick()
+	If Not FileExists("C:\Program Files\qemu\qemu-system-x86_64.exe") Then
+		RunWait('powershell -command "winget install qemu"', @ScriptDir, @SW_SHOW)
+	EndIf
+	Local $tselected = GUICtrlRead($TreeView1, 1)
+	if FileExists(@ScriptDir & "\" & $tselected & ".iso") <> 0 Then																; ISO
+		$strPowerShellCmd  = @ComSpec & ' /c color 9e & cd \progra~1\qemu & "qemu-system-x86_64.exe" -cdrom "' & _
+							 @ScriptDir & "\" & $tselected & '.iso" -m 10G'
+		RunWait($strPowerShellCmd, @ScriptDir, @SW_SHOW, $RUN_CREATE_NEW_CONSOLE)
+		ConsoleWrite($strPowerShellCmd & @CRLF)
+	EndIf
+	if FileExists(@ScriptDir & "\" & $tselected& ".img") <> 0 Then																; IMG
+		$strPowerShellCmd = @ComSpec & ' /c "C:\Program Files\qemu\qemu-system-x86_64.exe" -m 10G -drive file="' & _
+					@ScriptDir & "\" & $tselected & '.img",format=raw,index=0,media=disk -vga virtio -no-reboot'
+		RunWait($strPowerShellCmd, @ScriptDir, @SW_SHOW)
+		ConsoleWrite($strPowerShellCmd & @CRLF)
+	EndIf
+	If FileExists(@ScriptDir & "\" & $tselected& ".zip") <> 0 Then															; ZIP FILE
+		$strPowerShellCmd = @ComSpec & '/c PowerShell -Command "Expand-Archive -Path "' & $tselected & '.zip" -DestinationPath ' & _
+							@ScriptDir & ' -Force"'
+		GUICtrlSetData($TreeView1, StringReplace($tselected, StringRight($tselected, 4), ".iso"))
+		RunWait("Running... " & @CRLF & @TAB & $strPowerShellCmd, @ScriptDir, @SW_SHOW)
+		ConsoleWrite($strPowerShellCmd & @CRLF)
+		;FileDelete(@ScriptDir & "\" & $tselected & ".zip")
+	EndIf
+EndFunc
+Func execCommand($cmd)
+	Run(@comspec & " / c " & $cmd, @ScriptDir, @SW_SHOW)
+	ConsoleWrite("command executed: " & @CRLF & @TAB & $cmd & @CRLF)
 EndFunc
 
