@@ -39,6 +39,7 @@ Global $r4Gb = GUICtrlCreateRadio("4Gb", 304, 19, 49, 17)
 ; -----------------------------------------------------------------------------------
 Global $r10Gb = GUICtrlCreateRadio("10Gb", 304, 35, 49, 17)
 Global $Checkbox1 = GUICtrlCreateCheckbox("Terminal", 304, 67, 97, 17)
+GUICtrlSetOnEvent($Checkbox1, "Checkbox1Click")
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 Global $Download = GUICtrlCreateButton("&Download", 392, 8, 91, 25)
 GUICtrlSetTip($Download, "download selected distro")
@@ -58,13 +59,15 @@ Global $sFilePath  = ""
 Global $sSize = 0
 $Progress1 = GUICtrlCreateProgress (199, 105, 150, 22)
 GUIctrlSetState(-1, @SW_UNLOCK)
-$Label1 = GUICtrlCreateLabel(".", 365, 105, 50, 22)
+$Label1 = GUICtrlCreateLabel(".", 365, 105, 30, 22)
+GUIctrlSetState(-1, @SW_UNLOCK)
 GUICtrlSetFont($lblA, 10, 800, 0, "MS Sans Serif")
 GUICtrlSetColor($lblA, 0xFFFF00)
 GUICtrlSetBkColor($lblA, 0x0000FF)
 GUICtrlSetTip($lblA, "Mb's downloaded")
 
 $Label2 = GUICtrlCreateLabel(".", 420, 105, 50, 22)
+GUIctrlSetState(-1, @SW_UNLOCK)
 GUICtrlSetFont($lblB, 10, 800, 0, "MS Sans Serif")
 GUICtrlSetColor($lblB, 0xFFFF00)
 GUICtrlSetBkColor($lblB, 0x0000FF)
@@ -73,7 +76,7 @@ GUICtrlSetTip($lblB, "Percentage downloaded")
 GUISetState(@SW_SHOW)
 #EndRegion ### END Koda GUI section ###
 
-Global $iPid = run(@ComSpec & " /k color 9e & title output & cd " & @ScriptDir, @ScriptDir, @SW_MINIMIZE, $STDIN_CHILD + $STDOUT_CHILD)
+Global $iPid = run(@ComSpec & " /k color 9e & title output & cd " & @ScriptDir, @ScriptDir, @SW_HIDE, $STDIN_CHILD + $STDOUT_CHILD)
 ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $iPid = ' & $iPid & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
 
 Update_distrolist()
@@ -84,6 +87,7 @@ WEnd
 Func AddDistroClick()
 EndFunc
 Func Checkbox1Click()
+	GUISetState(@SW_SHOW, $iPID)
 EndFunc
 Func Form1_1Maximize()
 	GUISetState(@SW_SHOWMAXIMIZED)
@@ -100,7 +104,7 @@ Func ScanISOsClick()
         local $sFileName = FileFindNextFile($hSearch)
 		If @error Then ExitLoop
 		ConsoleWrite("File: " & $sFileName & @CRLF)
-		StdinWrite($iPid, "echo yolo mofos")
+		StdinWrite($iPid, "echo yolo mofos" & @CRLF)
 		;StdinWrite($iPid)
 		Local $sOutput = ""
 		$sOutput &= StdoutRead($iPID) ; Read the Stdout stream of the PID returned by Run.

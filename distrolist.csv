@@ -15,3 +15,9 @@ OpenSuseNet,https://download.opensuse.org/tumbleweed/iso/openSUSE-Tumbleweed-NET
 ZorinCore,https://mirror.serverion.com/zorinos/17/Zorin-OS-17.2-Core-64-bit.iso,3419209728
 Nobara,https://nobaraproject.org/download-nobara/#,4293380096
 KDENeon,https://files.kde.org/neon/images/user/20250102-1322/neon-user-20250102-1322.iso,2832203776
+Antix,https://sourceforge.net/projects/antix-linux/files/Final/antiX-23.2/antiX-23.2_x64-full.iso/download,2056257536
+TuxedoOS,https://os.tuxedocomputers.com/TUXEDO-OS_current.iso,3907901440
+VanillaOS,https://github.com/Vanilla-OS/live-iso/releases/download/2.0/VanillaOS-2-stable.20241123.iso,1960837
+FreeBSD,https://download.freebsd.org/releases/amd64/amd64/ISO-IMAGES/13.4/FreeBSD-13.4-RELEASE-amd64-dvd1.iso,4946003968
+Kali,https://cdimage.kali.org/kali-2024.4/kali-linux-2024.4-installer-amd64.iso,4373655552
+AlmaLinux,https://repo.almalinux.org/almalinux/9.5/isos/x86_64/AlmaLinux-9-latest-x86_64-dvd.iso,11382292480
