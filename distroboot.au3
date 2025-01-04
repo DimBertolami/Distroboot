@@ -5,7 +5,7 @@
 #include <WinNet.au3>
 #include <ColorConstants.au3>
 
-
+#RequireAdmin
 #include <ButtonConstants.au3>
 #include <GUIConstantsEx.au3>
 #include <ProgressConstants.au3>
@@ -13,6 +13,13 @@
 #include <TreeViewConstants.au3>
 #include <WindowsConstants.au3>
 Opt("GUIOnEventMode", 1)
+If not IsAdmin() Then
+	#Region --- CodeWizard generated code Start ---
+	;MsgBox features: Title=Yes, Text=Yes, Buttons=OK, Icon=Info, Modality=System Modal, Timeout=5 ss, Miscellaneous=Top-most attribute and Title/text right-justified
+	MsgBox(790592,"access denied","Admin rights required." & @CRLF & "This program will now close",5)
+	#EndRegion --- CodeWizard generated code End ---
+	Exit
+EndIf
 #Region ### START Koda GUI section ### Form=c:\scripts\autoit\distroboot.kxf
 Global $Form1_1 = GUICreate("", 490, 323, 192, 124)
 GUISetOnEvent($GUI_EVENT_CLOSE, "Form1_1Close")
@@ -36,11 +43,11 @@ GUICtrlCreateGroup("", -99, -99, 1, 1)
 Global $Download = GUICtrlCreateButton("&Download", 392, 8, 91, 25)
 GUICtrlSetTip($Download, "download selected distro")
 GUICtrlSetOnEvent($Download, "DownloadClick")
-Global $TreeView1 = GUICtrlCreateTreeView(0, 99, 193, 217, BitOR($GUI_SS_DEFAULT_TREEVIEW,$TVS_CHECKBOXES,$TVS_TRACKSELECT,$TVS_INFOTIP,$WS_VSCROLL,$WS_BORDER), BitOR($WS_EX_CLIENTEDGE,$WS_EX_STATICEDGE))
+Global $TreeView1 = GUICtrlCreateTreeView(0, 99, 193, 217, BitOR($GUI_SS_DEFAULT_TREEVIEW,$TVS_TRACKSELECT,$TVS_INFOTIP,$WS_VSCROLL,$WS_BORDER), BitOR($WS_EX_CLIENTEDGE,$WS_EX_STATICEDGE))
 
 GUICtrlSetTip(-1, "Distrolist")
 Global $Update_distrolist = GUICtrlCreateButton("&Update distrolist", 392, 72, 91, 25)
-GUICtrlSetOnEvent($Update_distrolist, "Update_distrolistClick")
+GUICtrlSetOnEvent($Update_distrolist, "Update_distrolist")
 Global $QemuRun = GUICtrlCreateButton("run in &Qemu VM", 392, 32, 91, 41)
 GUICtrlSetOnEvent($QemuRun, "QemuRunClick")
 Global $Progress1, $Progress2, $Progress3, $Progress4, $Label1, $Label2, $Label3, $Label4, $Label5, $Label6, $Label7, $Label8
@@ -49,15 +56,27 @@ Global $bIsRunning = False
 Global $Url, $Start, $Name, $iFileSize, $iBytesSize, $fDiff, $Download
 Global $sFilePath  = ""
 Global $sSize = 0
-; -----------------
-	 SetProgress($Progress1, 199, 105, 150, 12, $Label1, ".", 365, 105, 50, 12, $Label2, ".", 420, 105, 50, 12)
-;	 SetProgress($Progress2, 123, 120, 150, 12, $Label3, ".", 280, 122, 50, 12, $Label4, ".", 358, 120, 50, 12)
-;	 SetProgress($Progress2, 123, 136, 150, 12, $Label5, ".", 280, 135, 50, 12, $Label6, ".", 358, 136, 50, 12)
-;	 SetProgress($Progress2, 123, 148, 150, 12, $Label7, ".", 280, 148, 50, 12, $Label8, ".", 358, 148, 50, 12)
-; -----------------
+$Progress1 = GUICtrlCreateProgress (199, 105, 150, 22)
+GUIctrlSetState(-1, @SW_UNLOCK)
+$Label1 = GUICtrlCreateLabel(".", 365, 105, 50, 22)
+GUICtrlSetFont($lblA, 10, 800, 0, "MS Sans Serif")
+GUICtrlSetColor($lblA, 0xFFFF00)
+GUICtrlSetBkColor($lblA, 0x0000FF)
+GUICtrlSetTip($lblA, "Mb's downloaded")
+
+$Label2 = GUICtrlCreateLabel(".", 420, 105, 50, 22)
+GUICtrlSetFont($lblB, 10, 800, 0, "MS Sans Serif")
+GUICtrlSetColor($lblB, 0xFFFF00)
+GUICtrlSetBkColor($lblB, 0x0000FF)
+GUICtrlSetTip($lblB, "Percentage downloaded")
+
 GUISetState(@SW_SHOW)
 #EndRegion ### END Koda GUI section ###
-Update_distrolistClick()
+
+Global $iPid = run(@ComSpec & " /k color 9e & title output & cd " & @ScriptDir, @ScriptDir, @SW_MINIMIZE, $STDIN_CHILD + $STDOUT_CHILD)
+ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $iPid = ' & $iPid & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
+
+Update_distrolist()
 While 1
 	Sleep(1000)
 WEnd
@@ -67,6 +86,7 @@ EndFunc
 Func Checkbox1Click()
 EndFunc
 Func Form1_1Maximize()
+	GUISetState(@SW_SHOWMAXIMIZED)
 EndFunc
 Func Form1_1Minimize()
 EndFunc
@@ -80,34 +100,28 @@ Func ScanISOsClick()
         local $sFileName = FileFindNextFile($hSearch)
 		If @error Then ExitLoop
 		ConsoleWrite("File: " & $sFileName & @CRLF)
+		StdinWrite($iPid, "echo yolo mofos")
+		;StdinWrite($iPid)
+		Local $sOutput = ""
+		$sOutput &= StdoutRead($iPID) ; Read the Stdout stream of the PID returned by Run.
+		If @error Then ; Exit the loop if the process closes or StdoutRead returns an error.
+			ExitLoop
+		EndIf
+		MsgBox($MB_SYSTEMMODAL, "", "The sorted string is: " & @CRLF & $sOutput)
 	WEnd
 	local $hSearch2 = FileFindFirstFile("*.img")
 	While 1
         local $sFileName = FileFindNextFile($hSearch2)
 		If @error Then ExitLoop
 		ConsoleWrite("File: " & $sFileName & @CRLF)
+		StdinWrite($iPid, "echo yolo mofos")
+		;StdinWrite($iPid)
 		GUICtrlSetData($TreeView1, "")
 		GUICtrlSetData($TreeView1, $sFileName)
 	WEnd
 EndFunc
 
 
-Func SetProgress($lProg, $pleft, $ptop, $pwidth, $pheight, $lblA, _
-				 $ltxtA, $lleftA, $ltopA, $lwidthA, $lheightA, _
-				 $lblB, $ltxtB, $lleftB, $ltopB, $lwidthB, $lheightB)
-	$lProg= GUICtrlCreateProgress($pleft, $ptop, $pwidth, $pheight)
-	GUIctrlSetState(-1, @SW_UNLOCK)
-	$lblA = GUICtrlCreateLabel($ltxtA, $lleftA, $ltopA, $lwidthA, $lheightA)
-	GUICtrlSetFont($lblA, 10, 800, 0, "MS Sans Serif")
-	GUICtrlSetColor($lblA, 0xFFFF00)
-	GUICtrlSetBkColor($lblA, 0x0000FF)
-	GUICtrlSetTip($lblA, "Mb's downloaded")
-	$lblB = GUICtrlCreateLabel($ltxtB, $lleftB, $ltopB, $lwidthB, $lheightB)
-	GUICtrlSetFont($lblB, 10, 800, 0, "MS Sans Serif")
-	GUICtrlSetColor($lblB, 0xFFFF00)
-	GUICtrlSetBkColor($lblB, 0x0000FF)
-	GUICtrlSetTip($lblB, "Percentage downloaded")
-EndFunc
 Func DownloadClick()
 	$sFilePath = _WinAPI_GetTempFileName(@TempDir)
 	local $tmp = GUICtrlRead($TreeView1, 1)
@@ -122,7 +136,8 @@ Func DownloadClick()
 			$Download = InetGet($Url, $sFilePath, $INET_BINARYTRANSFER, $INET_DOWNLOADBACKGROUND)
 			Do
 				$iBytesSize = round(InetGetInfo($Download, $INET_DOWNLOADREAD)/1024/2024)
-				GUICtrlSetData($Progress1, round($sSize))
+				ConsoleWrite(round($iBytesSize/$iFileSize*100) & "Yolo Mofo" & @CRLF)
+				GUICtrlSetData($Progress1, $iBytesSize / $iFileSize * 100)
 				GUICtrlSetData($Label1, $iBytesSize & "Mb")
 				GUICtrlSetData($Label2, $sSize & "%")
 				Sleep(500)
@@ -136,7 +151,7 @@ Func Form1_1Close()
 	Exit
 EndFunc
 
-Func Update_distrolistClick()
+Func Update_distrolist()
 	If FileExists(@ScriptDir & "\distrolist1.csv") Then FileDelete(@ScriptDir & "\distrolist1.csv")
 	InetGet("https://raw.githubusercontent.com/DimBertolami/Distroboot/refs/heads/main/distrolist.csv", @ScriptDir & "\distrolist.csv")
 	$lines = _FileCountLines ( @ScriptDir & "\distrolist.csv" )

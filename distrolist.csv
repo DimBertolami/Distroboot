@@ -10,3 +10,8 @@ Debian,https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-12.8.0-a
 CachyOs,https://sourceforge.net/projects/cachyos-arch/files/gui-installer/desktop/241221/cachyos-desktop-linux-241221.iso/download,27262976
 Manjaro,https://download.manjaro.org/kde/24.2.1/manjaro-kde-24.2.1-241216-linux612.iso,4327022592
 PopOs,https://iso.pop-os.org/22.04/amd64/nvidia/49/pop-os_22.04_amd64_nvidia_49.iso,3097722880
+OpenSuseOffline,https://download.opensuse.org/tumbleweed/iso/openSUSE-Tumbleweed-DVD-x86_64-Current.iso,4634705920
+OpenSuseNet,https://download.opensuse.org/tumbleweed/iso/openSUSE-Tumbleweed-NET-x86_64-Current.iso,305135616
+ZorinCore,https://mirror.serverion.com/zorinos/17/Zorin-OS-17.2-Core-64-bit.iso,3419209728
+Nobara,https://nobaraproject.org/download-nobara/#,4293380096
+KDENeon,https://files.kde.org/neon/images/user/20250102-1322/neon-user-20250102-1322.iso,2832203776
