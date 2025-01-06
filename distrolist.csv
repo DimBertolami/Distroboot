@@ -21,3 +21,10 @@ VanillaOS,https://github.com/Vanilla-OS/live-iso/releases/download/2.0/VanillaOS
 FreeBSD,https://download.freebsd.org/releases/amd64/amd64/ISO-IMAGES/13.4/FreeBSD-13.4-RELEASE-amd64-dvd1.iso,4946003968
 Kali,https://cdimage.kali.org/kali-2024.4/kali-linux-2024.4-installer-amd64.iso,4373655552
 AlmaLinux,https://repo.almalinux.org/almalinux/9.5/isos/x86_64/AlmaLinux-9-latest-x86_64-dvd.iso,11382292480
+SparkyOS,https://sourceforge.net/projects/sparkylinux/files/xfce/sparkylinux-7.6-x86_64-xfce.iso/download,
+Garudaxfce,https://sourceforge.net/projects/garuda-linux/files/garuda/xfce/240428/garuda-xfce-linux-lts-240428.iso/download,
+Kubuntu,https://cdimage.ubuntu.com/kubuntu/releases/24.10/release/kubuntu-24.10-desktop-amd64.iso,
+CentOs,https://mirrors.centos.behostings.net/centos9/10-stream/BaseOS/x86_64/iso/CentOS-Stream-10-latest-x86_64-dvd1.iso,
+Q4Os,https://sourceforge.net/projects/q4os/files/stable/q4os-5.7-x64.r1.iso/download,
+SolusGnome,https://downloads.getsol.us/isos/2024-10-14/Solus-GNOME-Release-2024-10-14.iso,
+

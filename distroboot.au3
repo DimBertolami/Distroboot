@@ -1,3 +1,10 @@
+#cs
+
+
+	todo: logging.
+		  fully powershell or fully in autoit, but not mixed
+		  forget about showing / hiding the terminal, first functionality that's needed
+#ce
 #include <InetConstants.au3>
 #include <WinAPIFiles.au3>
 #include <MsgBoxConstants.au3>
@@ -15,7 +22,8 @@
 Opt("GUIOnEventMode", 1)
 If not IsAdmin() Then
 	#Region --- CodeWizard generated code Start ---
-	;MsgBox features: Title=Yes, Text=Yes, Buttons=OK, Icon=Info, Modality=System Modal, Timeout=5 ss, Miscellaneous=Top-most attribute and Title/text right-justified
+	;MsgBox features: Title=Yes, Text=Yes, Buttons=OK, Icon=Info, Modality=System Modal, Timeout=5 ss,
+	;Miscellaneous=Top-most attribute and Title/text right-justified
 	MsgBox(790592,"access denied","Admin rights required." & @CRLF & "This program will now close",5)
 	#EndRegion --- CodeWizard generated code End ---
 	Exit
@@ -44,8 +52,8 @@ GUICtrlCreateGroup("", -99, -99, 1, 1)
 Global $Download = GUICtrlCreateButton("&Download", 392, 8, 91, 25)
 GUICtrlSetTip($Download, "download selected distro")
 GUICtrlSetOnEvent($Download, "DownloadClick")
-Global $TreeView1 = GUICtrlCreateTreeView(0, 99, 193, 217, BitOR($GUI_SS_DEFAULT_TREEVIEW,$TVS_TRACKSELECT,$TVS_INFOTIP,$WS_VSCROLL,$WS_BORDER), BitOR($WS_EX_CLIENTEDGE,$WS_EX_STATICEDGE))
-
+Global $TreeView1 = GUICtrlCreateTreeView(0, 99, 193, 217, BitOR($GUI_SS_DEFAULT_TREEVIEW,$TVS_TRACKSELECT,$TVS_INFOTIP,$WS_VSCROLL,$WS_BORDER), _
+										BitOR($WS_EX_CLIENTEDGE,$WS_EX_STATICEDGE))
 GUICtrlSetTip(-1, "Distrolist")
 Global $Update_distrolist = GUICtrlCreateButton("&Update distrolist", 392, 72, 91, 25)
 GUICtrlSetOnEvent($Update_distrolist, "Update_distrolist")
@@ -76,10 +84,19 @@ GUICtrlSetTip($lblB, "Percentage downloaded")
 GUISetState(@SW_SHOW)
 #EndRegion ### END Koda GUI section ###
 
-Global $iPid = run(@ComSpec & " /k color 9e & title output & cd " & @ScriptDir, @ScriptDir, @SW_HIDE, $STDIN_CHILD + $STDOUT_CHILD)
-ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $iPid = ' & $iPid & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
-
+Global $iPid = run(@ComSpec & " /C color 9e & title output & cd " & @ScriptDir, @ScriptDir, @SW_SHOW, $STDIN_CHILD + $STDOUT_CHILD)
+StdinWrite($iPid, "echo Hello everyone")
+StdinWrite($iPid)
+Local $sReadOut = ""
+While 1
+	$sReadOut &= StdoutRead($iPid)
+	if @error Then
+		ExitLoop
+	EndIf
+WEnd
+ConsoleWrite("output: " & $sReadOut & @CRLF)
 Update_distrolist()
+
 While 1
 	Sleep(1000)
 WEnd
@@ -87,7 +104,8 @@ WEnd
 Func AddDistroClick()
 EndFunc
 Func Checkbox1Click()
-	GUISetState(@SW_SHOW, $iPID)
+
+	StdinWrite($iPid, "echo hello" & @CRLF)
 EndFunc
 Func Form1_1Maximize()
 	GUISetState(@SW_SHOWMAXIMIZED)
@@ -98,6 +116,7 @@ Func Form1_1Restore()
 EndFunc
 Func RemoveDistroClick()
 EndFunc
+
 Func ScanISOsClick()
 	local $hSearch = FileFindFirstFile("*.iso")
 	While 1
@@ -111,7 +130,7 @@ Func ScanISOsClick()
 		If @error Then ; Exit the loop if the process closes or StdoutRead returns an error.
 			ExitLoop
 		EndIf
-		MsgBox($MB_SYSTEMMODAL, "", "The sorted string is: " & @CRLF & $sOutput)
+		;MsgBox($MB_SYSTEMMODAL, "", "The sorted string is: " & @CRLF & $sOutput)
 	WEnd
 	local $hSearch2 = FileFindFirstFile("*.img")
 	While 1
@@ -122,6 +141,14 @@ Func ScanISOsClick()
 		;StdinWrite($iPid)
 		GUICtrlSetData($TreeView1, "")
 		GUICtrlSetData($TreeView1, $sFileName)
+;		$iPid
+	WEnd
+	Local $hSearch3 = FileFindFirstFile("*.zip")
+	while 1
+		Local $sFileName = FileFindNextFile($hSearch3)
+		If @error Then ExitLoop
+		ConsoleWrite("File: " & $sFileName & @CRLF)
+
 	WEnd
 EndFunc
 
@@ -151,6 +178,7 @@ Func DownloadClick()
 		EndIf
 	Next
 EndFunc
+
 Func Form1_1Close()
 	Exit
 EndFunc
@@ -163,16 +191,16 @@ Func Update_distrolist()
 	For $i = 1 To $lines Step 1
 		$line = FileReadLine(@ScriptDir & "\distrolist.csv", $i)
 		$arrLineSplit = StringSplit($line, ",")
-;		If $arrLineSplit[0] <> 0 Then
-			$Name = $arrLineSplit[1]
-			GUICtrlCreateTreeViewItem($Name, $TreeView1)
-			$Url = $arrLineSplit[2]
- 			$Size = Round($arrLineSplit[3]/1024/1024, 1)
-;		EndIf
+		$Name = $arrLineSplit[1]
+		GUICtrlCreateTreeViewItem($Name, $TreeView1)
+		$Url = $arrLineSplit[2]
+		$Size = Round($arrLineSplit[3]/1024/1024, 1)
 	Next
 EndFunc
+
 Func QemuRunClick()
 	If Not FileExists("C:\Program Files\qemu\qemu-system-x86_64.exe") Then
+		LogLine('running: powershell -command "winget install qemu"')
 		RunWait('powershell -command "winget install qemu"', @ScriptDir, @SW_SHOW)
 	EndIf
 	Local $tselected = GUICtrlRead($TreeView1, 1)
@@ -182,7 +210,7 @@ Func QemuRunClick()
 		execCommand($strCmd)
 	EndIf
 	if FileExists(@ScriptDir & "\" & $tselected& ".img") <> 0 Then																; IMG
-		$strCmd = '"C:\Program Files\qemu\qemu-system-x86_64.exe" -m 4G -drive file="' & _
+		$strCmd = 'cd \progra~1\qemu & "qemu-system-x86_64.exe" -m 4G -drive file="' & _
 							@ScriptDir & "\" & $tselected & '.img",format=raw,index=0,media=disk -vga virtio -no-reboot'
 		execCommand($strCmd)
 	EndIf
@@ -196,5 +224,13 @@ EndFunc
 Func execCommand($cmd)
 	RunWait(@comspec & " /c color 9e & " & $cmd, @ScriptDir, @SW_SHOW)
 	ConsoleWrite("command executed: " & @CRLF & @TAB & @comspec & " / c color 9e & " & $cmd & @CRLF)
+	LogLine("command executed: " & @CRLF & @TAB & @comspec & " / c color 9e & " & $cmd & @CRLF)
 EndFunc
+func LogLine($sLine)
+	local $LogFile = @ScriptDir & "\activity.log"
+	$fOpen = FileOpen($LogFile, $FO_CREATEPATH)
+	FileWriteLine($fOpen, $sLine)
+	FileClose($fOpen)
+EndFunc
+
 
