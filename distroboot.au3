@@ -7,6 +7,7 @@
 #include <InetConstants.au3>
 #include <WinAPIFiles.au3>
 #include <MsgBoxConstants.au3>
+#include <FontConstants.au3>
 #include <File.au3>
 #include <WinNet.au3>
 #include <Color.au3>
@@ -43,7 +44,8 @@ GUICtrlSetTip($Download, "download selected distro")
 GUICtrlSetOnEvent($Download, "DownloadClick")
 Global $TreeView1 = GUICtrlCreateTreeView(0, 99, 193, 217, BitOR($GUI_SS_DEFAULT_TREEVIEW,$TVS_TRACKSELECT,$TVS_INFOTIP,$WS_VSCROLL,$WS_BORDER), _
 										BitOR($WS_EX_CLIENTEDGE,$WS_EX_STATICEDGE))
-GUICtrlSetBkColor($TreeView1, $COLOR_AQUA)
+GUICtrlSetBkColor($TreeView1, $COLOR_BLUE)
+GUICtrlSetFont($TreeView1, 10, $FW_HEAVY)
 Global $Update_distrolist = GUICtrlCreateButton("&Update distrolist", 392, 72, 91, 25)
 GUICtrlSetOnEvent($Update_distrolist, "Update_distrolist")
 Global $QemuRun = GUICtrlCreateButton("run in &Qemu VM", 392, 32, 91, 41)
@@ -55,6 +57,7 @@ Global $sSize = 0
 Global $counter = 0
 GUISetState(@SW_SHOW)
 #EndRegion ### END Koda GUI section ###
+
 
 Update_distrolist()
 ConsoleWriter("Gui loaded...")
@@ -125,21 +128,23 @@ Func DownloadClick()
 		$Name = $arrLineSplit[0]
 		If $Name=$tmp Then
 			$Url = $arrLineSplit[1]
-			$sSize = $arrLineSplit[2]
+			$sSize = round($arrLineSplit[2]/1024/1024)
 			$Download = InetGet($Url, $sFilePath, $INET_BINARYTRANSFER, $INET_DOWNLOADBACKGROUND)
 			ConsoleWriter("downloading " & $Name)
-			ProgressOn(" Downloading " & $Name, "Size: " & $sSize, "0%", -1, -1, BitOR($DLG_NOTONTOP, $DLG_MOVEABLE))
+			; title, maintext, subtext
+			ProgressOn(" Downloading " & $Name, "0%", "", -1, -1, BitOR($DLG_NOTONTOP, $DLG_MOVEABLE))
 			Do
 				$i = round(InetGetInfo($Download, $INET_DOWNLOADREAD)/1024/2024) / round($arrLineSplit[2]/1024/2024) * 100
 				$i = Round($i)
-				ProgressSet($i, $i & "%")
-				ConsoleWriter("Percent downloaded: " & $i)
+				; percent subtext, maintext
+				ProgressSet($i, "Downloaded (" & round(InetGetInfo($Download, $INET_DOWNLOADREAD)/1024/2024)*2 & " / " & $sSize & "MB)", $i & "%")
+				ConsoleWriter("Downloaded (" & round(InetGetInfo($Download, $INET_DOWNLOADREAD)/1024/2024)*2 & " / " & $sSize & "MB)")
 				Sleep(500)
 			Until InetGetInfo($Download, $INET_DOWNLOADCOMPLETE)
 			InetClose($Download)
 			FileMove($sFilePath, @ScriptDir & "\" & $Name & ".iso", $FC_OVERWRITE + $FC_CREATEPATH)
 			ProgressSet(100, "Done", "Complete")
-			Sleep(1500)
+			Sleep(1000)
 			ProgressOff()
 			ConsoleWriter("Closing popup")
 		EndIf
@@ -152,6 +157,7 @@ EndFunc
 
 Func Update_distrolist()
 	GUICtrlSetState($r4Gb, $GUI_CHECKED)
+	GUISetBkColor($COLOR_YELLOW, $Form1_1)
 	If FileExists(@ScriptDir & "\distrolist1.csv") Then FileDelete(@ScriptDir & "\distrolist1.csv")
 	InetGet("https://raw.githubusercontent.com/DimBertolami/Distroboot/refs/heads/main/distrolist.csv", @ScriptDir & "\distrolist.csv")
 	$lines = _FileCountLines ( @ScriptDir & "\distrolist.csv" )
@@ -166,6 +172,7 @@ Func Update_distrolist()
 		ConsoleWriter($i & ") Name: " & $Name & " Size: " & $sSize)
 		ConsoleWriter("Url: " & $Url)
 		GUICtrlCreateTreeViewItem($i & ") " & $Name, $TreeView1)
+		GUICtrlSetColor($TreeView1, $COLOR_YELLOW)
 	Next
 EndFunc
 
