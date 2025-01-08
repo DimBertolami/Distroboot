@@ -3,6 +3,7 @@
 
 #ce
 #RequireAdmin
+#include <GuiTreeView.au3>
 #include <InetConstants.au3>
 #include <WinAPIFiles.au3>
 #include <MsgBoxConstants.au3>
@@ -102,24 +103,26 @@ Func RemoveDistroClick()
 EndFunc
 
 Func ScanISOsClick()
+	DeleteAllTVItems()
+	Update_distrolist()
 	local $hSearch = FileFindFirstFile("*.iso")
 	While 1
         local $sFileName = FileFindNextFile($hSearch)
 		If @error Then ExitLoop
-		ConsoleWriter($sFileName)
 	WEnd
+	ConsoleWriter($sFileName)
 	local $hSearch2 = FileFindFirstFile("*.img")
 	While 1
         local $sFileName = FileFindNextFile($hSearch2)
 		If @error Then ExitLoop
-		ConsoleWriter($sFileName)
 	WEnd
+	ConsoleWriter($sFileName)
 	Local $hSearch3 = FileFindFirstFile("*.zip")
 	while 1
 		Local $sFileName = FileFindNextFile($hSearch3)
 		If @error Then ExitLoop
-		ConsoleWriter($sFileName)
 	WEnd
+	ConsoleWriter($sFileName)
 EndFunc
 
 
@@ -167,8 +170,7 @@ Func Update_distrolist()
 	If FileExists(@ScriptDir & "\distrolist1.csv") Then FileDelete(@ScriptDir & "\distrolist1.csv")
 	InetGet("https://raw.githubusercontent.com/DimBertolami/Distroboot/refs/heads/main/distrolist.csv", @ScriptDir & "\distrolist.csv")
 	$lines = _FileCountLines ( @ScriptDir & "\distrolist.csv" )
-	GUICtrlSetData($TreeView1, "")
-
+	DeleteAllTVItems()
 	For $i = 1 To $lines Step 1
 		$line = FileReadLine(@ScriptDir & "\distrolist.csv", $i)
 		$arrLineSplit = StringSplit($line, ",")
@@ -176,10 +178,10 @@ Func Update_distrolist()
 		GUICtrlCreateTreeViewItem("(" & $i & ") " & $Name, $TreeView1)
 		$Url = $arrLineSplit[2]
 		$Size = Round($arrLineSplit[3]/1024/1024, 1)
+		ConsoleWriter("Name: " & $Name)
+		ConsoleWriter("Url:  " & $Url)
+		ConsoleWriter("Size: " & $Size)
 	Next
-	ConsoleWriter("Name: " & $Name)
-	ConsoleWriter("Url:  " & $Url)
-	ConsoleWriter("Size: " & $Size)
 EndFunc
 
 Func QemuRunClick()
@@ -190,17 +192,17 @@ Func QemuRunClick()
 	Local $tselected = GUICtrlRead($TreeView1, 1)	; ($i) "
 	$aSelected = StringSplit($tselected, ")")
 	$tselected = StringStripWS($aSelected[2], $STR_STRIPTRAILING)
-	if FileExists(@ScriptDir & "\" & $tselected & ".iso") <> 0 Then																; ISO
+	if FileExists("e:\iso\" & $tselected & ".iso") <> 0 Then																; ISO
 		execCommand('cd \progra~1\qemu & "qemu-system-x86_64.exe" -cdrom "' & _
-							 @ScriptDir & "\" & $tselected & '.iso" -m 4G')
+							 "e:\iso\" & $tselected & '.iso" -m 4G -full-screen')
 	EndIf
-	if FileExists(@ScriptDir & "\" & $tselected& ".img") <> 0 Then																; IMG
+	if FileExists("e:\iso\" & $tselected& ".img") <> 0 Then																; IMG
 		execCommand('cd \progra~1\qemu & "qemu-system-x86_64.exe" -m 4G -drive file="' & _
-							@ScriptDir & "\" & $tselected & '.img",format=raw,index=0,media=disk -vga virtio -no-reboot')
+							"e:\iso\" & $tselected & '.img",format=raw,index=0,media=disk -vga virtio -no-reboot -full-screen')
 	EndIf
-	If FileExists(@ScriptDir & "\" & $tselected& ".zip") <> 0 Then															; ZIP FILE
-		execCommand('PowerShell -Command "Expand-Archive -Path "' & $tselected & '.zip" -DestinationPath ' & @ScriptDir & ' -Force"')
-		;FileDelete(@ScriptDir & "\" & $tselected & ".zip")
+	If FileExists("e:\iso\" & $tselected& ".zip") <> 0 Then															; ZIP FILE
+		execCommand('PowerShell -Command "Expand-Archive -Path "' & "e:\iso\" & $tselected & '.zip" -DestinationPath e:\iso -Force"')
+		FileDelete("e:\iso\" & $tselected & ".zip")
 	EndIf
 EndFunc
 Func execCommand($cmd)
@@ -222,4 +224,14 @@ Func ConsoleWriter($cmd)
 	ConsoleWrite(@TAB & $stringline & @CRLF & @TAB & "|| " & $cmd & " ||" & @CRLF & @TAB & $stringline & @CRLF)
 EndFunc
 
-
+Func DeleteAllTVItems()
+	_GUICtrlTreeView_BeginUpdate($TreeView1)
+	Local $hParentItem = _GUICtrlTreeView_GetFirstItem($TreeView1), $hChildItem, $deleteTreelist, $iCnt, $Selected = 0
+	Do
+		$deleteTreelist = _GUICtrlTreeView_GetItemParam($TreeView1, $hParentItem)
+		$hParentItem = _GUICtrlTreeView_GetNextSibling($TreeView1, $hParentItem)
+		GUICtrlSetOnEvent($deleteTreelist, "") ;unregister event
+	Until $hParentItem = 0
+	GUICtrlSendMsg($TreeView1, $TVM_DELETEITEM, $TVI_ROOT, 0)
+	_GUICtrlTreeView_EndUpdate($TreeView1)
+EndFunc ;==>DeleteAll
