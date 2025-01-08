@@ -45,7 +45,7 @@ GUICtrlCreateGroup("", -99, -99, 1, 1)
 Global $Download = GUICtrlCreateButton("&Download", 392, 8, 91, 25)
 GUICtrlSetTip($Download, "download selected distro")
 GUICtrlSetOnEvent($Download, "DownloadClick")
-Global $TreeView1 = GUICtrlCreateTreeView(0, 99, 193, 217, BitOR($GUI_SS_DEFAULT_TREEVIEW,$TVS_TRACKSELECT,$TVS_INFOTIP,$WS_VSCROLL,$WS_BORDER), _
+Global $TreeView1 = GUICtrlCreateTreeView(2, 99, 487, 225, BitOR($GUI_SS_DEFAULT_TREEVIEW,$TVS_TRACKSELECT,$TVS_INFOTIP,$WS_VSCROLL,$WS_BORDER), _
 										BitOR($WS_EX_CLIENTEDGE,$WS_EX_STATICEDGE))
 GUICtrlSetBkColor($TreeView1, $COLOR_BLUE)
 GUICtrlSetFont($TreeView1, 10, $FW_HEAVY)
