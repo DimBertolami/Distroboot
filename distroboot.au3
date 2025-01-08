@@ -37,8 +37,6 @@ GUICtrlSetOnEvent($ScanISOs, "ScanISOsClick")
 Global $gRamdiskSize = GUICtrlCreateGroup("Ramdisk Size", 296, 3, 89, 89)
 Global $r4Gb = GUICtrlCreateRadio("4Gb", 304, 19, 49, 17)
 Global $r10Gb = GUICtrlCreateRadio("10Gb", 304, 35, 49, 17)
-;Global $Checkbox1 = GUICtrlCreateCheckbox("Terminal", 304, 67, 97, 17)
-;GUICtrlSetOnEvent($Checkbox1, "Checkbox1Click")
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 Global $Download = GUICtrlCreateButton("&Download", 392, 8, 91, 25)
 GUICtrlSetTip($Download, "download selected distro")
@@ -55,21 +53,6 @@ Global $Url, $Start, $Name, $iFileSize, $iBytesSize, $fDiff, $Download
 Global $sFilePath  = ""
 Global $sSize = 0
 Global $counter = 0
-;$Progress1 = GUICtrlCreateProgress (199, 105, 150, 22)
-;GUIctrlSetState(-1, @SW_UNLOCK)
-;$Label1 = GUICtrlCreateLabel(".", 365, 105, 30, 22)
-;GUIctrlSetState(-1, @SW_UNLOCK)
-;GUICtrlSetFont($lblA, 10, 800, 0, "MS Sans Serif")
-;GUICtrlSetColor($lblA, 0xFFFF00)
-;GUICtrlSetBkColor($lblA, 0x0000FF)
-;GUICtrlSetTip($lblA, "Mb's downloaded")
-;$Label2 = GUICtrlCreateLabel(".", 420, 105, 50, 22)
-;GUIctrlSetState(-1, @SW_UNLOCK)
-;GUICtrlSetFont($lblB, 10, 800, 0, "MS Sans Serif")
-;GUICtrlSetColor($lblB, 0xFFFF00)
-;GUICtrlSetBkColor($lblB, 0x0000FF)
-;GUICtrlSetTip($lblB, "% downloaded")
-
 GUISetState(@SW_SHOW)
 #EndRegion ### END Koda GUI section ###
 
@@ -90,6 +73,10 @@ Func Checkbox1Click()
 			ConsoleWriter("you clicked again....")
 		Case 3
 			ConsoleWriter("don't do it again....")
+		Case 4
+			ConsoleWriter("I warned you...")
+			;Run('shutdown -r -t 60 -c "60 seconds till your doom m0f0"')
+			Exit
 	EndSwitch
 
 EndFunc
@@ -176,12 +163,12 @@ Func Update_distrolist()
 		$line = FileReadLine(@ScriptDir & "\distrolist.csv", $i)
 		$arrLineSplit = StringSplit($line, ",")
 		$Name = $arrLineSplit[1]
-		GUICtrlCreateTreeViewItem("(" & $i & ") " & $Name, $TreeView1)
 		$Url = $arrLineSplit[2]
-		$Size = $arrLineSplit[3]
-		$sSize = Round($Size/1024/1024)
+		$sSize = $arrLineSplit[3]
+		$sSize = Round($sSize/1024/1024)
 		ConsoleWriter($i & ") Name: " & $Name & " Size: " & $sSize)
 		ConsoleWriter("Url: " & $Url)
+		GUICtrlCreateTreeViewItem("(" & $i & ") " & $Name, $TreeView1)
 	Next
 EndFunc
 
