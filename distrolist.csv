@@ -13,8 +13,8 @@ PopOs,https://iso.pop-os.org/22.04/amd64/nvidia/49/pop-os_22.04_amd64_nvidia_49.
 OpenSuseOffline,https://download.opensuse.org/tumbleweed/iso/openSUSE-Tumbleweed-DVD-x86_64-Current.iso,4634705920
 OpenSuseNet,https://download.opensuse.org/tumbleweed/iso/openSUSE-Tumbleweed-NET-x86_64-Current.iso,305135616
 ZorinCore,https://mirror.serverion.com/zorinos/17/Zorin-OS-17.2-Core-64-bit.iso,3419209728
-Nobara,https://nobaraproject.org/download-nobara/#,4293380096
-KDENeon,https://files.kde.org/neon/images/user/20250102-1322/neon-user-20250102-1322.iso,2832203776
+Nobara,https://nobara-images.nobaraproject.org/Nobara-41-Official-Nvidia-2025-01-05.iso,4781371392
+KDENeon,https://files.kde.org/neon/images/stable/current/neon-stable-current.iso,2821718016
 Antix,https://sourceforge.net/projects/antix-linux/files/Final/antiX-23.2/antiX-23.2_x64-full.iso/download,2056257536
 TuxedoOS,https://os.tuxedocomputers.com/TUXEDO-OS_current.iso,3907901440
 VanillaOS,https://github.com/Vanilla-OS/live-iso/releases/download/2.0/VanillaOS-2-stable.20241123.iso,1960837
