@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="windows-1251"?>
-<object type="TAForm" name="Form1_1">
+<object type="TAForm" name="Form1_1_1">
 	<properties>
 		<property name="Left" vt="Int16">192</property>
 		<property name="Top" vt="Int8">124</property>
-		<property name="Width" vt="Int16">505</property>
-		<property name="Height" vt="Int16">466</property>
-		<property name="Caption" vt="String">Form1</property>
+		<property name="Width" vt="Int16">515</property>
+		<property name="Height" vt="Int16">356</property>
 		<property name="Color" vt="Ident">clBtnFace</property>
 		<property name="Font.Charset" vt="Ident">DEFAULT_CHARSET</property>
 		<property name="Font.Color" vt="Ident">clWindowText</property>
 		<property name="Font.Height" vt="Int8">-11</property>
 		<property name="Font.Name" vt="String">MS Sans Serif</property>
 		<property name="Font.Style" vt="Set"/>
-		<property name="OldCreateOrder" vt="False">False</property>
+		<property name="OldCreateOrder" vt="True">True</property>
 		<property name="Visible" vt="True">True</property>
 		<property name="Style" vt="Int32">-1798701056</property>
 		<property name="ExStyle" vt="Int16">256</property>
@@ -32,10 +31,10 @@
 	<components>
 		<object type="TAGroup" name="gRamdiskSize">
 			<properties>
-				<property name="Left" vt="Int16">296</property>
+				<property name="Left" vt="Int16">240</property>
 				<property name="Top" vt="Int8">3</property>
-				<property name="Width" vt="Int8">89</property>
-				<property name="Height" vt="Int8">94</property>
+				<property name="Width" vt="Int16">249</property>
+				<property name="Height" vt="Int8">54</property>
 				<property name="CtrlStyle" vt="Int32">1342308359</property>
 				<property name="CtrlExStyle" vt="Int8">0</property>
 				<property name="Caption" vt="String">Ramdisk Size</property>
@@ -45,8 +44,8 @@
 			<components>
 				<object type="TARadio" name="r10Gb">
 					<properties>
-						<property name="Left" vt="Int8">8</property>
-						<property name="Top" vt="Int8">32</property>
+						<property name="Left" vt="Int8">96</property>
+						<property name="Top" vt="Int8">17</property>
 						<property name="Width" vt="Int8">49</property>
 						<property name="Height" vt="Int8">17</property>
 						<property name="Caption" vt="String">10Gb</property>
@@ -64,142 +63,12 @@
 						<property name="Width" vt="Int8">49</property>
 						<property name="Height" vt="Int8">17</property>
 						<property name="Caption" vt="String">4Gb</property>
+						<property name="Checked" vt="True">True</property>
 						<property name="TabOrder" vt="Int8">0</property>
+						<property name="TabStop" vt="True">True</property>
 						<property name="CtrlStyle" vt="Int32">1342242825</property>
 						<property name="CtrlExStyle" vt="Int8">0</property>
 						<property name="Resizing" vt="Set">DockHeight</property>
-					</properties>
-					<components/>
-				</object>
-				<object type="TACheckbox" name="Checkbox1">
-					<properties>
-						<property name="Left" vt="Int8">8</property>
-						<property name="Top" vt="Int8">64</property>
-						<property name="Width" vt="Int8">97</property>
-						<property name="Height" vt="Int8">17</property>
-						<property name="Caption" vt="String">Terminal</property>
-						<property name="TabOrder" vt="Int8">2</property>
-						<property name="CtrlStyle" vt="Int32">1342242819</property>
-						<property name="CtrlExStyle" vt="Int8">0</property>
-						<property name="Resizing" vt="Set">DockHeight</property>
-					</properties>
-					<components/>
-				</object>
-			</components>
-		</object>
-		<object type="TAGroup" name="Progress">
-			<properties>
-				<property name="Left" vt="Int8">8</property>
-				<property name="Top" vt="Int16">328</property>
-				<property name="Width" vt="Int16">481</property>
-				<property name="Height" vt="Int8">97</property>
-				<property name="CtrlStyle" vt="Int32">1342308359</property>
-				<property name="CtrlExStyle" vt="Int8">0</property>
-				<property name="Caption" vt="String">Result</property>
-				<property name="TabOrder" vt="Int8">5</property>
-				<property name="Resizing" vt="Set"/>
-			</properties>
-			<components>
-				<object type="TALabel" name="Label1">
-					<properties>
-						<property name="Left" vt="Int16">312</property>
-						<property name="Top" vt="Int8">16</property>
-						<property name="Width" vt="Int8">88</property>
-						<property name="Height" vt="Int8">33</property>
-						<property name="Caption" vt="String">Speed: </property>
-						<property name="Enabled" vt="False">False</property>
-						<property name="Font.Charset" vt="Ident">DEFAULT_CHARSET</property>
-						<property name="Font.Color" vt="Ident">clWindowText</property>
-						<property name="Font.Height" vt="Int8">-24</property>
-						<property name="Font.Name" vt="String">MS Sans Serif</property>
-						<property name="Font.Style" vt="Set"/>
-						<property name="ParentFont" vt="False">False</property>
-						<property name="TabOrder" vt="Int8">0</property>
-						<property name="HaveVariable" vt="False">False</property>
-						<property name="CtrlStyle" vt="Int32">1342308608</property>
-						<property name="CtrlExStyle" vt="Int8">0</property>
-						<property name="Resizing" vt="Set"/>
-					</properties>
-					<components/>
-				</object>
-				<object type="TALabel" name="Label2">
-					<properties>
-						<property name="Left" vt="Int16">392</property>
-						<property name="Top" vt="Int8">16</property>
-						<property name="Width" vt="Int8">78</property>
-						<property name="Height" vt="Int8">33</property>
-						<property name="Caption" vt="String">. Kbps</property>
-						<property name="Color" vt="Ident">clBlue</property>
-						<property name="Font.Charset" vt="Ident">DEFAULT_CHARSET</property>
-						<property name="Font.Color" vt="Ident">clYellow</property>
-						<property name="Font.Height" vt="Int8">-24</property>
-						<property name="Font.Name" vt="String">MS Sans Serif</property>
-						<property name="Font.Style" vt="Set">fsBold</property>
-						<property name="ParentColor" vt="False">False</property>
-						<property name="ParentFont" vt="False">False</property>
-						<property name="TabOrder" vt="Int8">1</property>
-						<property name="HaveVariable" vt="False">False</property>
-						<property name="CtrlStyle" vt="Int32">1342308608</property>
-						<property name="CtrlExStyle" vt="Int8">0</property>
-						<property name="Resizing" vt="Set"/>
-					</properties>
-					<components/>
-				</object>
-				<object type="TAProgress" name="Progress1">
-					<properties>
-						<property name="Left" vt="Int8">8</property>
-						<property name="Top" vt="Int8">16</property>
-						<property name="Width" vt="Int16">294</property>
-						<property name="Height" vt="Int8">65</property>
-						<property name="TabOrder" vt="Int8">2</property>
-						<property name="CtrlStyle" vt="Int32">1342308352</property>
-						<property name="CtrlExStyle" vt="Int8">0</property>
-						<property name="Resizing" vt="Set"/>
-					</properties>
-					<components/>
-				</object>
-				<object type="TALabel" name="Label3">
-					<properties>
-						<property name="Left" vt="Int16">336</property>
-						<property name="Top" vt="Int8">48</property>
-						<property name="Width" vt="Int8">57</property>
-						<property name="Height" vt="Int8">33</property>
-						<property name="Caption" vt="String">Size:</property>
-						<property name="Enabled" vt="False">False</property>
-						<property name="Font.Charset" vt="Ident">DEFAULT_CHARSET</property>
-						<property name="Font.Color" vt="Ident">clWindowText</property>
-						<property name="Font.Height" vt="Int8">-24</property>
-						<property name="Font.Name" vt="String">MS Sans Serif</property>
-						<property name="Font.Style" vt="Set"/>
-						<property name="ParentFont" vt="False">False</property>
-						<property name="TabOrder" vt="Int8">3</property>
-						<property name="HaveVariable" vt="False">False</property>
-						<property name="CtrlStyle" vt="Int32">1342308608</property>
-						<property name="CtrlExStyle" vt="Int8">0</property>
-						<property name="Resizing" vt="Set"/>
-					</properties>
-					<components/>
-				</object>
-				<object type="TALabel" name="Label4">
-					<properties>
-						<property name="Left" vt="Int16">392</property>
-						<property name="Top" vt="Int8">48</property>
-						<property name="Width" vt="Int8">54</property>
-						<property name="Height" vt="Int8">33</property>
-						<property name="Caption" vt="String">0Mb</property>
-						<property name="Color" vt="Ident">clBlue</property>
-						<property name="Font.Charset" vt="Ident">DEFAULT_CHARSET</property>
-						<property name="Font.Color" vt="Ident">clYellow</property>
-						<property name="Font.Height" vt="Int8">-24</property>
-						<property name="Font.Name" vt="String">MS Sans Serif</property>
-						<property name="Font.Style" vt="Set">fsBold</property>
-						<property name="ParentColor" vt="False">False</property>
-						<property name="ParentFont" vt="False">False</property>
-						<property name="TabOrder" vt="Int8">4</property>
-						<property name="HaveVariable" vt="False">False</property>
-						<property name="CtrlStyle" vt="Int32">1342308608</property>
-						<property name="CtrlExStyle" vt="Int8">0</property>
-						<property name="Resizing" vt="Set"/>
 					</properties>
 					<components/>
 				</object>
@@ -207,37 +76,73 @@
 		</object>
 		<object type="TATreeView" name="TreeView1">
 			<properties>
-				<property name="Left" vt="Int8">8</property>
-				<property name="Top" vt="Int8">104</property>
-				<property name="Width" vt="Int16">481</property>
-				<property name="Height" vt="Int16">217</property>
-				<property name="Hint" vt="String">Distrolist</property>
-				<property name="CtrlStyle" vt="Int32">1342376759</property>
+				<property name="Left" vt="Int8">2</property>
+				<property name="Top" vt="Int8">59</property>
+				<property name="Width" vt="Int16">487</property>
+				<property name="Height" vt="Int16">265</property>
+				<property name="CtrlStyle" vt="Int32">1352862263</property>
 				<property name="CtrlExStyle" vt="Int32">131584</property>
 				<property name="Resizing" vt="Set"/>
 				<property name="Items.Data" vt="Binary">
-					<bin>040000001F000000FFFFFFFF00000000FFFFFFFFFFFFFFFF0000000000000000</bin>
-					<bin>065562756E747520000000FFFFFFFF00000000FFFFFFFFFFFFFFFF0000000000</bin>
-					<bin>000000074B6F64616368691D000000FFFFFFFF00000000FFFFFFFFFFFFFFFF00</bin>
-					<bin>00000000000000044B616C6920000000FFFFFFFF00000000FFFFFFFFFFFFFFFF</bin>
-					<bin>000000000000000007416E64726F6964</bin>
+					<bin>01000000200000000000000000000000FFFFFFFFFFFFFFFF0000000000000000</bin>
+					<bin>076929204E616D65</bin>
 				</property>
-				<property name="TabOrder" vt="Int8">6</property>
+				<property name="Font.Charset" vt="Ident">DEFAULT_CHARSET</property>
+				<property name="Font.Color" vt="Ident">clWindowText</property>
+				<property name="Font.Height" vt="Int8">-13</property>
+				<property name="Font.Name" vt="String">MS Sans Serif</property>
+				<property name="Font.Style" vt="Set"/>
+				<property name="TabOrder" vt="Int8">5</property>
 			</properties>
 			<components/>
 		</object>
-		<object type="TAButton" name="ScanISOs">
+		<object type="TAButton" name="Download">
 			<properties>
-				<property name="Left" vt="Int16">200</property>
+				<property name="Left" vt="Int8">104</property>
 				<property name="Top" vt="Int8">8</property>
-				<property name="Width" vt="Int8">91</property>
-				<property name="Height" vt="Int8">89</property>
-				<property name="Caption" vt="String">&amp;Scan ISO folder</property>
-				<property name="TabOrder" vt="Int8">2</property>
+				<property name="Width" vt="Int8">35</property>
+				<property name="Height" vt="Int8">25</property>
+				<property name="Hint" vt="String">download selected distro</property>
+				<property name="Caption" vt="String">D/L</property>
+				<property name="TabOrder" vt="Int8">4</property>
 				<property name="Color" vt="Ident">clBtnFace</property>
 				<property name="CtrlStyle" vt="Int32">1342373888</property>
 				<property name="CtrlExStyle" vt="Int8">0</property>
 				<property name="Resizing" vt="Set">DockWidth, DockHeight</property>
+				<property name="HotKey" vt="Int16">16452</property>
+			</properties>
+			<components/>
+		</object>
+		<object type="TAButton" name="QemuRun">
+			<properties>
+				<property name="Left" vt="Int8">0</property>
+				<property name="Top" vt="Int8">32</property>
+				<property name="Width" vt="Int8">99</property>
+				<property name="Height" vt="Int8">25</property>
+				<property name="Caption" vt="String">run in Qemu VM</property>
+				<property name="TabOrder" vt="Int8">7</property>
+				<property name="Color" vt="Ident">clBtnFace</property>
+				<property name="CtrlStyle" vt="Int32">1342373888</property>
+				<property name="CtrlExStyle" vt="Int8">0</property>
+				<property name="Resizing" vt="Set">DockWidth, DockHeight</property>
+				<property name="HotKey" vt="Int16">16465</property>
+			</properties>
+			<components/>
+		</object>
+		<object type="TAButton" name="Update_distrolist">
+			<properties>
+				<property name="Left" vt="Int16">136</property>
+				<property name="Top" vt="Int8">32</property>
+				<property name="Width" vt="Int8">99</property>
+				<property name="Height" vt="Int8">25</property>
+				<property name="Hint" vt="String">this requires an internet connection to access updated distros on github.</property>
+				<property name="Caption" vt="String">Update distrolist</property>
+				<property name="TabOrder" vt="Int8">6</property>
+				<property name="Color" vt="Ident">clBtnFace</property>
+				<property name="CtrlStyle" vt="Int32">1342373888</property>
+				<property name="CtrlExStyle" vt="Int8">0</property>
+				<property name="Resizing" vt="Set">DockWidth, DockHeight</property>
+				<property name="HotKey" vt="Int16">16469</property>
 			</properties>
 			<components/>
 		</object>
@@ -245,60 +150,69 @@
 			<properties>
 				<property name="Left" vt="Int8">0</property>
 				<property name="Top" vt="Int8">8</property>
-				<property name="Width" vt="Int8">83</property>
-				<property name="Height" vt="Int8">89</property>
-				<property name="Caption" vt="String">&amp;Add ISO Image</property>
+				<property name="Width" vt="Int8">51</property>
+				<property name="Height" vt="Int8">25</property>
+				<property name="Hint" vt="String">manually add iso to the list</property>
+				<property name="Caption" vt="String">&amp;Add</property>
 				<property name="TabOrder" vt="Int8">0</property>
 				<property name="Color" vt="Ident">clBtnFace</property>
 				<property name="CtrlStyle" vt="Int32">1342373888</property>
 				<property name="CtrlExStyle" vt="Int8">0</property>
 				<property name="Resizing" vt="Set">DockWidth, DockHeight</property>
+				<property name="HotKey" vt="Int16">16449</property>
 			</properties>
 			<components/>
 		</object>
 		<object type="TAButton" name="RemoveDistro">
 			<properties>
-				<property name="Left" vt="Int8">88</property>
+				<property name="Left" vt="Int8">56</property>
 				<property name="Top" vt="Int8">8</property>
-				<property name="Width" vt="Int8">107</property>
-				<property name="Height" vt="Int8">89</property>
-				<property name="Caption" vt="String">&amp;Remove ISO Image</property>
+				<property name="Width" vt="Int8">43</property>
+				<property name="Height" vt="Int8">25</property>
+				<property name="Caption" vt="String">&amp;del</property>
 				<property name="TabOrder" vt="Int8">1</property>
 				<property name="Color" vt="Ident">clBtnFace</property>
 				<property name="CtrlStyle" vt="Int32">1342373888</property>
 				<property name="CtrlExStyle" vt="Int8">0</property>
 				<property name="Resizing" vt="Set">DockWidth, DockHeight</property>
+				<property name="HotKey" vt="Int16">16466</property>
 			</properties>
 			<components/>
 		</object>
-		<object type="TAButton" name="Download">
+		<object type="TAButton" name="ScanISOs">
 			<properties>
-				<property name="Left" vt="Int16">392</property>
+				<property name="Left" vt="Int8">99</property>
+				<property name="Top" vt="Int8">32</property>
+				<property name="Width" vt="Int8">35</property>
+				<property name="Height" vt="Int8">25</property>
+				<property name="Caption" vt="String">&amp;Scan</property>
+				<property name="TabOrder" vt="Int8">2</property>
+				<property name="Color" vt="Ident">clBtnFace</property>
+				<property name="CtrlStyle" vt="Int32">1342373888</property>
+				<property name="CtrlExStyle" vt="Int8">0</property>
+				<property name="Resizing" vt="Set">DockWidth, DockHeight</property>
+				<property name="HotKey" vt="Int16">16467</property>
+			</properties>
+			<components/>
+		</object>
+		<object type="TAInput" name="ISOS">
+			<properties>
+				<property name="Left" vt="Int16">144</property>
 				<property name="Top" vt="Int8">8</property>
-				<property name="Width" vt="Int8">91</property>
-				<property name="Height" vt="Int8">41</property>
-				<property name="Hint" vt="String">download selected distro</property>
-				<property name="Caption" vt="String">&amp;Download</property>
-				<property name="TabOrder" vt="Int8">4</property>
-				<property name="Color" vt="Ident">clBtnFace</property>
-				<property name="CtrlStyle" vt="Int32">1342373888</property>
-				<property name="CtrlExStyle" vt="Int8">0</property>
-				<property name="Resizing" vt="Set">DockWidth, DockHeight</property>
-			</properties>
-			<components/>
-		</object>
-		<object type="TAButton" name="Update_distrolist">
-			<properties>
-				<property name="Left" vt="Int16">392</property>
-				<property name="Top" vt="Int8">56</property>
-				<property name="Width" vt="Int8">91</property>
-				<property name="Height" vt="Int8">41</property>
-				<property name="Caption" vt="String">&amp;Update distrolist</property>
-				<property name="TabOrder" vt="Int8">7</property>
-				<property name="Color" vt="Ident">clBtnFace</property>
-				<property name="CtrlStyle" vt="Int32">1342373888</property>
-				<property name="CtrlExStyle" vt="Int8">0</property>
-				<property name="Resizing" vt="Set">DockWidth, DockHeight</property>
+				<property name="Width" vt="Int8">89</property>
+				<property name="Height" vt="Int8">24</property>
+				<property name="Hint" vt="String">ISO Download folder</property>
+				<property name="Font.Charset" vt="Ident">DEFAULT_CHARSET</property>
+				<property name="Font.Color" vt="Ident">clWindowText</property>
+				<property name="Font.Height" vt="Int8">-13</property>
+				<property name="Font.Name" vt="String">MS Sans Serif</property>
+				<property name="Font.Style" vt="Set">fsBold</property>
+				<property name="ParentFont" vt="False">False</property>
+				<property name="TabOrder" vt="Int8">8</property>
+				<property name="Text" vt="String">E:\ISO\</property>
+				<property name="CtrlStyle" vt="Int32">1342374016</property>
+				<property name="CtrlExStyle" vt="Int16">512</property>
+				<property name="Resizing" vt="Set">DockHeight</property>
 			</properties>
 			<components/>
 		</object>
