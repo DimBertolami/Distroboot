@@ -91,7 +91,7 @@ EndFunc
 
 Func ScanISOsClick()
 	DeleteAllTVItems()
-	Update_distrolist()
+;	Update_distrolist()
 	local $hSearch = FileFindFirstFile("*.iso")
 	While 1
         local $sFileName = FileFindNextFile($hSearch)
@@ -125,9 +125,10 @@ Func DownloadClick()
 		$Name = $arrLineSplit[0]
 		If $Name=$tmp Then
 			$Url = $arrLineSplit[1]
+			$sSize = $arrLineSplit[2]
 			$Download = InetGet($Url, $sFilePath, $INET_BINARYTRANSFER, $INET_DOWNLOADBACKGROUND)
 			ConsoleWriter("downloading " & $Name)
-			ProgressOn(" Downloading " & $Name, "..." , "0%", -1, -1, BitOR($DLG_NOTONTOP, $DLG_MOVEABLE))
+			ProgressOn(" Downloading " & $Name, "Size: " & $sSize, "0%", -1, -1, BitOR($DLG_NOTONTOP, $DLG_MOVEABLE))
 			Do
 				$i = round(InetGetInfo($Download, $INET_DOWNLOADREAD)/1024/2024) / round($arrLineSplit[2]/1024/2024) * 100
 				$i = Round($i)
@@ -143,9 +144,6 @@ Func DownloadClick()
 			ConsoleWriter("Closing popup")
 		EndIf
 	Next
-;	GUICtrlSetData($Progress1, 0)
-;	GUICtrlSetData($Label1, "")
-;	GUICtrlSetData($Label2, "")
 EndFunc
 
 Func Form1_1Close()
@@ -157,7 +155,6 @@ Func Update_distrolist()
 	If FileExists(@ScriptDir & "\distrolist1.csv") Then FileDelete(@ScriptDir & "\distrolist1.csv")
 	InetGet("https://raw.githubusercontent.com/DimBertolami/Distroboot/refs/heads/main/distrolist.csv", @ScriptDir & "\distrolist.csv")
 	$lines = _FileCountLines ( @ScriptDir & "\distrolist.csv" )
-	ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $lines = ' & $lines & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
 	DeleteAllTVItems()
 	For $i = 1 To $lines Step 1
 		$line = FileReadLine(@ScriptDir & "\distrolist.csv", $i)
@@ -168,7 +165,7 @@ Func Update_distrolist()
 		$sSize = Round($sSize/1024/1024)
 		ConsoleWriter($i & ") Name: " & $Name & " Size: " & $sSize)
 		ConsoleWriter("Url: " & $Url)
-		GUICtrlCreateTreeViewItem("(" & $i & ") " & $Name, $TreeView1)
+		GUICtrlCreateTreeViewItem($i & ") " & $Name, $TreeView1)
 	Next
 EndFunc
 
