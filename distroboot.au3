@@ -1,7 +1,10 @@
 #cs
+	Author: 	Dimi Bertolami
 
-
+		distrowatch distro downloader / run in qemu VM
 #ce
+
+
 #RequireAdmin
 #include <GuiTreeView.au3>
 #include <InetConstants.au3>
@@ -131,12 +134,10 @@ Func DownloadClick()
 			$sSize = round($arrLineSplit[2]/1024/1024)
 			$Download = InetGet($Url, $sFilePath, $INET_BINARYTRANSFER, $INET_DOWNLOADBACKGROUND)
 			ConsoleWriter("downloading " & $Name)
-			; title, maintext, subtext
 			ProgressOn(" Downloading " & $Name, "0%", "", -1, -1, BitOR($DLG_NOTONTOP, $DLG_MOVEABLE))
 			Do
 				$i = round(InetGetInfo($Download, $INET_DOWNLOADREAD)/1024/2024) / round($arrLineSplit[2]/1024/2024) * 100
 				$i = Round($i)
-				; percent subtext, maintext
 				ProgressSet($i, "Downloaded (" & round(InetGetInfo($Download, $INET_DOWNLOADREAD)/1024/2024)*2 & " / " & $sSize & "MB)", $i & "%")
 				ConsoleWriter("Downloaded (" & round(InetGetInfo($Download, $INET_DOWNLOADREAD)/1024/2024)*2 & " / " & $sSize & "MB)")
 				Sleep(500)
@@ -169,8 +170,8 @@ Func Update_distrolist()
 		$Url = $arrLineSplit[2]
 		$sSize = $arrLineSplit[3]
 		$sSize = Round($sSize/1024/1024)
-		ConsoleWriter($i & ") Name: " & $Name & " Size: " & $sSize)
-		ConsoleWriter("Url: " & $Url)
+		ConsoleWriter($i & ")" & @TAB & "Name: " & $Name & " Size: " & $sSize)
+		ConsoleWriter("Url:" & @TAB & $Url)
 		GUICtrlCreateTreeViewItem($i & ") " & $Name, $TreeView1)
 		GUICtrlSetColor($TreeView1, $COLOR_YELLOW)
 	Next
@@ -201,11 +202,10 @@ Func execCommand($cmd)
 	RunWait(@comspec & " /c " & $cmd, @ScriptDir, @SW_HIDE)
 	ConsoleWriter($cmd)
 EndFunc
-func LogLine($sLine)
-	local $LogFile = @ScriptDir & "\activity.log"
-	$fOpen = FileOpen($LogFile, $FO_CREATEPATH)
-	FileWriteLine($fOpen, $sLine)
-	FileClose($fOpen)
+func LogLine($sLine, $logFile = @ScriptDir & "\activity.log")
+	$logHandle = FileOpen($LogFile, $FO_APPEND)
+	FileWriteLine($logHandle, $sLine)
+	FileClose($logHandle)
 EndFunc
 Func ConsoleWriter($cmd)
 	local $lineLenght = StringLen($cmd)
@@ -214,6 +214,7 @@ Func ConsoleWriter($cmd)
 		$stringline &= "-"
 	Next
 	ConsoleWrite(@TAB & $stringline & @CRLF & @TAB & "|| " & $cmd & " ||" & @CRLF & @TAB & $stringline & @CRLF)
+	LogLine($cmd)
 EndFunc
 
 Func DeleteAllTVItems()
@@ -222,7 +223,7 @@ Func DeleteAllTVItems()
 	Do
 		$deleteTreelist = _GUICtrlTreeView_GetItemParam($TreeView1, $hParentItem)
 		$hParentItem = _GUICtrlTreeView_GetNextSibling($TreeView1, $hParentItem)
-		GUICtrlSetOnEvent($deleteTreelist, "") ;unregister event
+		;GUICtrlSetOnEvent($deleteTreelist, "") ;unregister event
 	Until $hParentItem = 0
 	GUICtrlSendMsg($TreeView1, $TVM_DELETEITEM, $TVI_ROOT, 0)
 	_GUICtrlTreeView_EndUpdate($TreeView1)
