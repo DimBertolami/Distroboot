@@ -30,15 +30,15 @@ GUISetOnEvent($GUI_EVENT_MAXIMIZE, "Form1_1Maximize")
 GUISetOnEvent($GUI_EVENT_RESTORE, "Form1_1Restore")
 Global $AddDistro = GUICtrlCreateButton("&Add ISO Image", 0, 8, 83, 89)
 GUICtrlSetOnEvent($AddDistro, "AddDistroClick")
-Global $RemoveDistro = GUICtrlCreateButton("&Remove ISO Image", 88, 8, 107, 81)
+Global $RemoveDistro = GUICtrlCreateButton("&Remove ISO Image", 88, 8, 107, 89)
 GUICtrlSetOnEvent($RemoveDistro, "RemoveDistroClick")
-Global $ScanISOs = GUICtrlCreateButton("&Scan ISO folder", 200, 8, 91, 81)
+Global $ScanISOs = GUICtrlCreateButton("&Scan ISO folder", 200, 8, 91, 89)
 GUICtrlSetOnEvent($ScanISOs, "ScanISOsClick")
-Global $gRamdiskSize = GUICtrlCreateGroup("Ramdisk Size", 296, 3, 89, 86)
+Global $gRamdiskSize = GUICtrlCreateGroup("Ramdisk Size", 296, 3, 89, 89)
 Global $r4Gb = GUICtrlCreateRadio("4Gb", 304, 19, 49, 17)
 Global $r10Gb = GUICtrlCreateRadio("10Gb", 304, 35, 49, 17)
-Global $Checkbox1 = GUICtrlCreateCheckbox("Terminal", 304, 67, 97, 17)
-GUICtrlSetOnEvent($Checkbox1, "Checkbox1Click")
+;Global $Checkbox1 = GUICtrlCreateCheckbox("Terminal", 304, 67, 97, 17)
+;GUICtrlSetOnEvent($Checkbox1, "Checkbox1Click")
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 Global $Download = GUICtrlCreateButton("&Download", 392, 8, 91, 25)
 GUICtrlSetTip($Download, "download selected distro")
@@ -170,6 +170,7 @@ Func Update_distrolist()
 	If FileExists(@ScriptDir & "\distrolist1.csv") Then FileDelete(@ScriptDir & "\distrolist1.csv")
 	InetGet("https://raw.githubusercontent.com/DimBertolami/Distroboot/refs/heads/main/distrolist.csv", @ScriptDir & "\distrolist.csv")
 	$lines = _FileCountLines ( @ScriptDir & "\distrolist.csv" )
+	ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $lines = ' & $lines & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
 	DeleteAllTVItems()
 	For $i = 1 To $lines Step 1
 		$line = FileReadLine(@ScriptDir & "\distrolist.csv", $i)
@@ -177,10 +178,10 @@ Func Update_distrolist()
 		$Name = $arrLineSplit[1]
 		GUICtrlCreateTreeViewItem("(" & $i & ") " & $Name, $TreeView1)
 		$Url = $arrLineSplit[2]
-		$Size = Round($arrLineSplit[3]/1024/1024, 1)
-		ConsoleWriter("Name: " & $Name)
-		ConsoleWriter("Url:  " & $Url)
-		ConsoleWriter("Size: " & $Size)
+		$Size = $arrLineSplit[3]
+		$sSize = Round($Size/1024/1024)
+		ConsoleWriter($i & ") Name: " & $Name & " Size: " & $sSize)
+		ConsoleWriter("Url: " & $Url)
 	Next
 EndFunc
 
