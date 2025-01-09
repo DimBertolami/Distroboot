@@ -24,7 +24,8 @@
 #include <WindowsConstants.au3>
 Global $AddDistro, $RemoveDistro, $r4Gb, $r10Gb, $Update_distrolist, $QemuRun, $gRamdiskSize
 Global $Progress1, $Label1, $Label2, $Url, $Start, $Name, $iFileSize, $iBytesSize, $fDiff, $Download, $sFilePath  = "", $sSize = 0, $counter = 0
-
+Global $arrColors = [$COLOR_ALICEBLUE, $COLOR_ANTIQUEWHITE, $COLOR_AQUA, $COLOR_AQUAMARINE, $COLOR_AZURE, $COLOR_BEIGE, $COLOR_BISQUE, $COLOR_BLACK, $COLOR_BLANCHEDALMOND, $COLOR_BLUE, $COLOR_BLUEVIOLET, $COLOR_BROWN, $COLOR_BURLYWOOD, $COLOR_CADETBLUE, $COLOR_CHARTREUSE, $COLOR_CHOCOLATE, $COLOR_CORAL, $COLOR_CORNFLOWERBLUE, $COLOR_CORNSILK, $COLOR_CRIMSON, $COLOR_CYAN, $COLOR_DARKBLUE, $COLOR_DARKCYAN, $COLOR_DARKGOLDENROD, $COLOR_DARKGRAY, $COLOR_DARKGREEN, $COLOR_DARKKHAKI, $COLOR_DARKMAGENTA, $COLOR_DARKOLIVEGREEN, $COLOR_DARKORANGE, $COLOR_DARKORCHID, $COLOR_DARKRED, $COLOR_DARKSALMON, $COLOR_DARKSEAGREEN, $COLOR_DARKSLATEBLUE, $COLOR_DARKSLATEGRAY, $COLOR_DARKTURQUOISE, $COLOR_DARKVIOLET, $COLOR_DEEPPINK, $COLOR_DEEPSKYBLUE, $COLOR_DIMGRAY, $COLOR_DODGERBLUE, $COLOR_FIREBRICK, $COLOR_FLORALWHITE, $COLOR_FORESTGREEN, $COLOR_FUCHSIA, $COLOR_GAINSBORO, $COLOR_GHOSTWHITE, $COLOR_GOLD, $COLOR_GOLDENROD, $COLOR_GRAY, $COLOR_GREEN, $COLOR_GREENYELLOW, $COLOR_HONEYDEW, $COLOR_HOTPINK, $COLOR_INDIANRED, $COLOR_INDIGO, $COLOR_IVORY, $COLOR_KHAKI, $COLOR_LAVENDER, $COLOR_LAVENDERBLUSH, $COLOR_LAWNGREEN]
+ConsoleWrite(UBound($arrColors) & @CRLF)
 Opt("GUIOnEventMode", 1)
 If not IsAdmin() Then
 	MsgBox(790592,"access denied","Admin rights required." & @CRLF & "This popup will self destruct",5)
@@ -61,6 +62,31 @@ $QemuRun = GUICtrlCreateButton("run in &Qemu VM", 392, 32, 91, 41)
 GUICtrlSetOnEvent($QemuRun, "QemuRunClick")
 GUISetState(@SW_SHOW)
 #EndRegion ### END Koda GUI section ###
+
+GUICtrlSetBkColor($QemuRun, $COLOR_LIGHTGOLDENRODYELLOW)
+GUICtrlSetColor($QemuRun, $COLOR_BLUEVIOLET)
+GUICtrlSetFont($QemuRun, 8, $FW_BOLD)
+GUICtrlSetBkColor($Update_distrolist, $COLOR_LIGHTGOLDENRODYELLOW)
+GUICtrlSetColor($Update_distrolist, $COLOR_BLUEVIOLET)
+GUICtrlSetFont($Update_distrolist, 8, $FW_BOLD)
+GUICtrlSetBkColor($Download, $COLOR_LIGHTGOLDENRODYELLOW)
+GUICtrlSetColor($Download, $COLOR_BLUEVIOLET)
+GUICtrlSetFont($Download, 8, $FW_BOLD)
+GUICtrlSetBkColor($r10Gb, $COLOR_LIGHTGOLDENRODYELLOW)
+GUICtrlSetColor($r10Gb, $COLOR_BLUEVIOLET)
+GUICtrlSetFont($r10Gb, 8, $FW_BOLD)
+GUICtrlSetBkColor($r4Gb, $COLOR_LIGHTGOLDENRODYELLOW)
+GUICtrlSetColor($r4Gb, $COLOR_BLUEVIOLET)
+GUICtrlSetFont($r4Gb, 8, $FW_BOLD)
+GUICtrlSetBkColor($ScanISOs, $COLOR_LIGHTGOLDENRODYELLOW)
+GUICtrlSetColor($ScanISOs, $COLOR_BLUEVIOLET)
+GUICtrlSetFont($ScanISOs, 8, $FW_BOLD)
+GUICtrlSetBkColor($RemoveDistro, $COLOR_LIGHTGOLDENRODYELLOW)
+GUICtrlSetColor($RemoveDistro, $COLOR_BLUEVIOLET)
+GUICtrlSetFont($RemoveDistro, 8, $FW_BOLD)
+GUICtrlSetBkColor($AddDistro, $COLOR_LIGHTGOLDENRODYELLOW)
+GUICtrlSetColor($AddDistro, $COLOR_BLUEVIOLET)
+GUICtrlSetFont($AddDistro, 8, $FW_BOLD)
 
 
 Update_distrolist()
@@ -140,6 +166,11 @@ Func DownloadClick()
 	local $tmp = GUICtrlRead($TreeView1, 1)
 	$aTmp = StringSplit($tmp,")")
 	$tmp = StringStripWS($aTmp[2], $STR_STRIPLEADING + $STR_STRIPTRAILING)
+	$firstTreeviewItem = _GUICtrlTreeView_GetFirstItem ($TreeView1)
+	For $i = 1 To UBound($arrColors) Step 1
+		_GUICtrlTreeView_SetLineColor($firstTreeviewItem, $arrColors[$i-1])
+	Next
+
 	$lines = _FileCountLines ( @ScriptDir & "\distrolist.csv" )
 	For $i = 1 To $lines Step 1
 		$line = FileReadLine(@ScriptDir & "\distrolist.csv", $i)
