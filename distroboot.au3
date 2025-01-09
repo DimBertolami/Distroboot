@@ -32,7 +32,7 @@ If not IsAdmin() Then
 EndIf
 
 #Region ### START Koda GUI section ### Form=c:\scripts\autoit\distroboot.kxf
-Global $Form1_1 = GUICreate("", 490, 323, 192, 124)
+Global $Form1_1 = GUICreate("Distr0 Select0r", 490, 323, 192, 124)
 GUISetOnEvent($GUI_EVENT_CLOSE, "Form1_1Close")
 GUISetOnEvent($GUI_EVENT_MINIMIZE, "Form1_1Minimize")
 GUISetOnEvent($GUI_EVENT_MAXIMIZE, "Form1_1Maximize")
@@ -52,7 +52,7 @@ GUICtrlSetTip($Download, "download selected distro")
 GUICtrlSetOnEvent($Download, "DownloadClick")
 $TreeView1 = GUICtrlCreateTreeView(2, 99, 487, 225, _
 						BitOR($GUI_SS_DEFAULT_TREEVIEW,$TVS_TRACKSELECT,$TVS_INFOTIP, _
-						$WS_VSCROLL,$WS_BORDER), BitOR($WS_EX_CLIENTEDGE,$WS_EX_STATICEDGE))
+						$WS_VSCROLL,$WS_BORDER), BitOR($WS_EX_CLIENTEDGE,$WS_EX_STATICEDGE, $WS_EX_TRANSPARENT))
 GUICtrlSetBkColor($TreeView1, $COLOR_LIGHTSKYBLUE)
 GUICtrlSetFont($TreeView1, 10, $FW_HEAVY)
 $Update_distrolist = GUICtrlCreateButton("&Update distrolist", 392, 72, 91, 25)
@@ -101,34 +101,35 @@ Func RemoveDistroClick()
 EndFunc
 
 Func GetISOFolder()
+
 	If not FileExists(@ScriptDir & "\config.ini") Then
 		IniWrite(@ScriptDir & "\config.ini", "", "ISO","e:\ISO\")
 	EndIf
-;	ConsoleWrite(IniRead(@ScriptDir & "\config.ini", "", "ISO", "e:\ISO\") & "!" & @CRLF)
+
 	Return StringStripWS(IniRead(@ScriptDir & "\config.ini", "", "ISO", "e:\ISO\"),$STR_STRIPLEADING + $STR_STRIPTRAILING)
+
+EndFunc
+
+Func FindFiles($sSearchStr)
+	$fISO = GetISOFolder()
+	local $hSearch = FileFindFirstFile($fISO & $sSearchStr)
+	While 1
+        $sFileName = FileFindNextFile($hSearch)
+		If @error Then ExitLoop
+		 ConsoleWriter(_Now & ": " & $sFileName & $sSearchStr)
+	WEnd
 EndFunc
 
 Func ScanISOsClick()
 	$fISO = GetISOFolder()
 	DeleteAllTVItems()
-
-	local $hSearch = FileFindFirstFile($fISO & "*.iso")
-	While 1
-        $sFileName = FileFindNextFile($hSearch)
-		If @error Then ExitLoop
-;		 ConsoleWriter("!" & $sFileName & "!")
-	WEnd
-	local $hSearch2 = FileFindFirstFile($fISO & "*.img")
-	While 1
-        $sFileName = FileFindNextFile($hSearch2)
-		If @error Then ExitLoop
-;		ConsoleWriter("!" & $sFileName & "!")
-	WEnd
+	FindFiles("*.iso")
+	FindFiles("*.img")
 	Local $hSearch3 = FileFindFirstFile($fISO & "*.zip")
 	while 1
 		$sFileName = FileFindNextFile($hSearch3)
 		If @error Then ExitLoop
-;		ConsoleWriter("!" & $sFileName & "!")
+		 ConsoleWriter(_Now & ": " & $sFileName & "*.zip")
 	WEnd
 ;	ConsoleWrite(@CRLF)
 EndFunc
@@ -192,23 +193,31 @@ EndFunc
 
 Func QemuRunClick()
 	$fISO = GetISOFolder()
-	Local $tselected = GUICtrlRead($TreeView1, 1)	; ($i) "
-	$aSelected = StringSplit($tselected, ")")
-	$tselected = StringStripWS($aSelected[2],  $STR_STRIPLEADING + $STR_STRIPTRAILING)
-;	ConsoleWrite($fISO & $tselected & ".iso!" & @CRLF)
 	If Not FileExists("C:\Progra~1\qemu\qemu-system-x86_64.exe") Then execCommand('powershell -command "winget install qemu"')
-	if FileExists($fISO & $tselected & ".iso") <> 0 Then execCommand('cd \progra~1\qemu & "qemu-system-x86_64.exe" -cdrom "' & $fISO & $tselected & '.iso" -m 4G -full-screen')
-	if FileExists($fISO & $tselected & ".img") <> 0 Then execCommand('cd \progra~1\qemu & "qemu-system-x86_64.exe" -m 4G -drive file="' & $fISO & $tselected & _
-																							'.img",format=raw,index=0,media=disk -vga virtio -no-reboot -full-screen') ;  -full-screen
-	If FileExists($fISO & $tselected & ".zip") <> 0 Then
-		execCommand('PowerShell -Command "Expand-Archive -Path "' & $fISO & $tselected & '.zip" -DestinationPath ' & $fISO & ' -Force"')
-		FileDelete($fISO & $tselected & ".zip")
+	Local $tselected = GUICtrlRead($TreeView1, 1)
+	If $tselected = 0 Then
+		ConsoleWriter("no linux distribution (distro) selected")
+	Else
+		$aSelected = StringSplit($tselected, ")")
+		$tselected = StringStripWS($aSelected[2],  $STR_STRIPLEADING + $STR_STRIPTRAILING)
+		Select
+			Case FileExists($fISO & $tselected & ".iso") <> 0
+				;execCommand('cd \Progra~1\qemu\ & "qemu-system-x86_64.exe" -cdrom "' & $fISO & $tselected & '.iso" -m 4G -full-screen')
+				execCommand('cd \Progra~1\qemu\ & "qemu-system-x86_64.exe" -cdrom "' & $fISO & $tselected & '.iso" -m 4G -full-screen')
+			Case FileExists($fISO & $tselected & ".img") <> 0
+				execCommand('cd \Progra~1\qemu\ & "qemu-system-x86_64.exe" -m 4G -drive file="' & $fISO & $tselected & _
+							'.img",format=raw,index=0,media=disk -vga virtio -no-reboot -full-screen')
+			Case FileExists($fISO & $tselected & ".zip") <> 0
+				execCommand('PowerShell -Command "Expand-Archive -Path "' & $fISO & $tselected & '.zip" -DestinationPath ' & $fISO & ' -Force"')
+				FileDelete($fISO & $tselected & ".zip")
+		EndSelect
 	EndIf
 EndFunc
 
 Func execCommand($cmd)
-	RunWait(@comspec & " /c " & $cmd, @ScriptDir, @SW_SHOW)
-;	ConsoleWriter($cmd)
+
+	RunWait(@comspec & " /c set path=%path%;\Progra~1\qemu\" & $cmd, "C:\Progra~1\qemu\", @SW_SHOW)
+	ConsoleWriter($cmd)
 EndFunc
 
 Func ConsoleWriter($cmd)
@@ -217,7 +226,7 @@ Func ConsoleWriter($cmd)
 	For $i = 1 To $lineLenght Step 1
 		$stringline &= "-"
 	Next
-	ConsoleWrite(@TAB & $stringline & @CRLF & @TAB & "|| " & $cmd & " ||" & @CRLF & @TAB & $stringline & @CRLF)
+	ConsoleWrite('!(' & @ScriptLineNumber & ')' & @CRLF & @TAB & $stringline & @CRLF & @TAB & "|| " & $cmd & " ||" & @CRLF & @TAB & $stringline & @CRLF & '>Error code: ' & @error & @CRLF)
 	LogLine($cmd)
 EndFunc
 
