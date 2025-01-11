@@ -46,8 +46,10 @@ BlueFinOS,https://download.projectbluefin.io/bluefin-stable.iso,6163005440
 PearlLinux,https://sourceforge.net/projects/pearl-linux-mate-12/files/latest/download,4422893568
 LocOs,https://sourceforge.net/projects/loc-os/files/Loc-OS%2023/Loc-OS-23-XFCE-x86_64.iso/download,1280491520
 Lubuntu,https://cdimage.ubuntu.com/lubuntu/releases/24.04.1/release/lubuntu-24.04.1-desktop-amd64.iso,
-Xubuntu,https://nl.archive.ubuntu.com/ubuntu-cdimage-xubuntu/releases/24.04/release/xubuntu-24.04.1-desktop-amd64.iso,
-UbuntuMate,https://cdimage.ubuntu.com/ubuntu-mate/releases/noble/release/ubuntu-mate-24.04.1-desktop-amd64.iso,
+Xubuntu,https://nl.archive.ubuntu.com/ubuntu-cdimage-xubuntu/releases/24.04/release/xubuntu-24.04.1-desktop-amd64.iso,4100511744
+UbuntuMate,https://cdimage.ubuntu.com/ubuntu-mate/releases/noble/release/ubuntu-mate-24.04.1-desktop-amd64.iso,4216483840
 Zenwalk,http://download.zenwalk.org/x86_64/current/zenwalk-current-241227.iso,
-LingmoOs,https://sourceforge.net/projects/lingmo-os/files/latest/download,
-TucanaLinux,https://ftp2.osuosl.org/pub/tucana-linux/stable/iso/tucana-3.1-gnome.iso,
+LingmoOs,https://sourceforge.net/projects/lingmo-os/files/latest/download,3865470566
+TucanaLinux,https://ftp2.osuosl.org/pub/tucana-linux/stable/iso/tucana-3.1-gnome.iso,2776858624
+Xubuntu,https://nl.archive.ubuntu.com/ubuntu-cdimage-xubuntu/releases/24.04/release/xubuntu-24.04.1-desktop-amd64.iso,4100511744
+UbuntuMate,https://cdimage.ubuntu.com/ubuntu-mate/releases/noble/release/ubuntu-mate-24.04.1-desktop-amd64.iso,4216483840

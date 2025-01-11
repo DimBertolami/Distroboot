@@ -56,6 +56,7 @@ GUICtrlSetFont($TreeView1, 10, $FW_HEAVY)
 _GUICtrlTreeView_SetBkColor($TreeView1, $COLOR_GOLD)
 _GUICtrlTreeView_SetTextColor($TreeView1, $COLOR_DEEPPINK)
 _GUICtrlTreeView_SetLineColor($TreeView1, $COLOR_GREENYELLOW)
+
 $Update_distrolist = GUICtrlCreateButton("&Update distrolist", 392, 72, 91, 25)
 GUICtrlSetOnEvent($Update_distrolist, "Update_distrolist")
 $QemuRun = GUICtrlCreateButton("run in &Qemu VM", 392, 32, 91, 41)
@@ -90,6 +91,9 @@ GUICtrlSetFont($AddDistro, 8, $FW_BOLD)
 
 
 Update_distrolist()
+; WM_NOTIFY message handler
+GUIRegisterMsg( $WM_NOTIFY, "WM_NOTIFY" )
+
 While 1
 	Sleep(100)
 WEnd
@@ -139,52 +143,21 @@ Func ScanISOsClick()
 EndFunc
 
 Func DownloadClick()
+	Local $ii = 0
 	$fISO = GetISOFolder()
 	$sFilePath = _WinAPI_GetTempFileName(@TempDir)
+	_GUICtrlTreeView_SetBkColor($TreeView1, $COLOR_GOLD)
+	_GUICtrlTreeView_SetTextColor($TreeView1, $COLOR_DEEPPINK)
 
-;	$lines = _FileCountLines ( @ScriptDir & "\distrolist.csv" )
-	$lines = _GUICtrlTreeView_GetCount($TreeView1)
 	local $tmp = GUICtrlRead($TreeView1, 1)
 	$aTmp = StringSplit($tmp,")")
-	$tmp = StringStripWS($aTmp[2], $STR_STRIPLEADING + $STR_STRIPTRAILING)
+	$Name = StringStripWS($aTmp[2], $STR_STRIPLEADING + $STR_STRIPTRAILING)
 
+	$linesTV  = _GUICtrlTreeView_GetCount($TreeView1)
 	_GUICtrlTreeView_BeginUpdate($TreeView1)
-	$firstTreeviewItem = _GUICtrlTreeView_GetFirstItem ($TreeView1)
-	For $i = 1 To $lines Step 1
-		$colorcode = $arrColors[$i]
-		$nextTreeItem = _GUICtrlTreeView_GetNext($TreeView1, $firstTreeviewItem)
-		_GUICtrlTreeView_ClickItem($TreeView1, $nextTreeItem)
-		_GUICtrlTreeView_SetBkColor($TreeView1, $COLOR_GOLD)
-		_GUICtrlTreeView_SetTextColor($TreeView1, $COLOR_DEEPPINK)
-		_GUICtrlTreeView_SetLineColor($TreeView1, $COLOR_DEEPPINK)
-	Next
-	_GUICtrlTreeView_EndUpdate($TreeView1)
-	For $i = 1 To $lines Step 1
-		$line = FileReadLine(@ScriptDir & "\distrolist.csv", $i)
-		$arrLineSplit = StringSplit($line, ",", 2)
-		$Name = $arrLineSplit[0]
-		If $Name=$tmp Then
-			$Url = $arrLineSplit[1]
-			$sSize = round($arrLineSplit[2]/1024/1024)
-			$Download = InetGet($Url, $sFilePath, $INET_BINARYTRANSFER, $INET_DOWNLOADBACKGROUND)
-			ConsoleWriter("downloading " & $Name)
-			ProgressOn(" Downloading " & $Name & ".iso", "0%", "", -1, -1, BitOR($DLG_NOTONTOP, $DLG_MOVEABLE))
-			Do
-				$i = round(InetGetInfo($Download, $INET_DOWNLOADREAD)/1024/2024) / round($arrLineSplit[2]/1024/2024) * 100
-				$i = Round($i)
-				ProgressSet($i & " testing...", "Progress (" & round(InetGetInfo($Download, $INET_DOWNLOADREAD)/1024/2024)*2 & " / " & $sSize & "MB)", $i & "%")
-				ConsoleWriter("Downloaded (" & round(InetGetInfo($Download, $INET_DOWNLOADREAD)/1024/2024)*2 & " / " & $sSize & "MB)")
-				Sleep(200)
-				GUISetState(@SW_SHOW)
-			Until InetGetInfo($Download, $INET_DOWNLOADCOMPLETE)
-			InetClose($Download)
-			FileMove($sFilePath, $fISO & $Name & ".iso", $FC_OVERWRITE + $FC_CREATEPATH)
-			ProgressSet(100, "Done", "Complete")
-			Sleep(2000)
-			ProgressOff()
-			ConsoleWriter("Done")
-		EndIf
-	Next
+			ListFiles_ToTreeView( $fISO, 0 )
+	  _GUICtrlTreeView_EndUpdate($TreeView1)
+	ConsoleWriter("Done")
 EndFunc
 
 Func Form1_1Close()
@@ -199,18 +172,10 @@ Func Update_distrolist()
 	If FileExists(@ScriptDir & "\distrolist1.csv") Then FileDelete(@ScriptDir & "\distrolist1.csv")
 	InetGet("https://raw.githubusercontent.com/DimBertolami/Distroboot/refs/heads/main/distrolist.csv", @ScriptDir & "\distrolist.csv")
 	$lines = _FileCountLines ( @ScriptDir & "\distrolist.csv" )
+	_GUICtrlTreeView_BeginUpdate($TreeView1)
 	DeleteAllTVItems()
-	For $i = 1 To $lines Step 1
-		$line = FileReadLine(@ScriptDir & "\distrolist.csv", $i)
-		$arrLineSplit = StringSplit($line, ",")
-		$Name = $arrLineSplit[1]
-		$Url = $arrLineSplit[2]
-		$sSize = $arrLineSplit[3]
-		$sSize = Round($sSize/1024/1024)
-		GUICtrlCreateTreeViewItem($i & ") " & $Name, $TreeView1)
-		; if also in iso folder change to bold or change color
-		If FileExists($fISO & $Name & ".iso") = 1 Then
-	Next
+	ListFiles_ToTreeView( $fISO, 0 )
+	_GUICtrlTreeView_EndUpdate($TreeView1)
 EndFunc
 
 Func QemuRunClick()
@@ -236,7 +201,10 @@ EndFunc
 
 Func execCommand($cmd)
 	ConsoleWriter($cmd)
-	return RunWait(@comspec & ' /c set path=%path%;c:\Progra~1\qemu\ & ' & $cmd, "C:\Progra~1\qemu\", @SW_HIDE)
+	Local $iPid = RunWait(@comspec & ' /c set path=%path%;c:\Progra~1\qemu\ & ' & $cmd, "C:\Progra~1\qemu\", @SW_HIDE)
+	If @error Then
+	EndIf
+	ConsoleWrite( _ArrayToString( ProcessGetStats ($iPid,1)) & @CRLF)
 EndFunc
 
 Func ConsoleWriter($cmd)
@@ -268,3 +236,82 @@ func LogLine($sLine)
 	EndIf
 EndFunc
 
+Func WM_NOTIFY( $hWnd, $iMsg, $wParam, $lParam )
+	Local $tNMHDR = DllStructCreate( $tagNMHDR, $lParam )
+	Local $hWndFrom = HWnd( DllStructGetData( $tNMHDR, "hWndFrom" ) )
+	Local $iCode = DllStructGetData( $tNMHDR, "Code" )
+
+	Switch $hWndFrom
+		Case $TreeView1
+			Switch $iCode
+				Case $NM_CUSTOMDRAW
+					Local $tNMTVCUSTOMDRAW = DllStructCreate( $tagNMTVCUSTOMDRAW, $lParam )
+					Local $dwDrawStage = DllStructGetData( $tNMTVCUSTOMDRAW, "DrawStage" )
+					Switch $dwDrawStage							; Specifies the drawing stage
+						Case $CDDS_PREPAINT           ; Before the paint cycle begins
+							Return $CDRF_NOTIFYITEMDRAW ; Item-related drawing operations
+						Case $CDDS_ITEMPREPAINT			  ; Before painting an item
+							Local $iItemParam = DllStructGetData( $tNMTVCUSTOMDRAW, "ItemParam" )
+							If $iItemParam Then
+								DllStructSetData( $tNMTVCUSTOMDRAW, "ClrTextBk", 0xCCCCFF )	; Red, BGR
+							Else
+								DllStructSetData( $tNMTVCUSTOMDRAW, "ClrTextBk", 0xCCFFCC )	; Green
+							EndIf
+							Return $CDRF_NEWFONT        ; Return $CDRF_NEWFONT after changing colors
+					EndSwitch
+			EndSwitch
+	EndSwitch
+
+	Return $GUI_RUNDEFMSG
+	#forceref $hWnd, $iMsg, $wParam
+EndFunc
+
+Func ListFiles_ToTreeView( $sSourceFolder, $hItem )
+	; Force a trailing \
+	If StringRight( $sSourceFolder, 1 ) <> "\" Then $sSourceFolder &= "\"
+	Local $oDict = ObjCreate( "Scripting.Dictionary" )
+	; Start the search
+	Local $hSearch = FileFindFirstFile( $sSourceFolder & "*.*" )
+	; If no files found then return
+	If $hSearch = -1 Then Return ; This is where we break the recursive loop <<<<<<<<<<<<<<<<<<<<<<<<<<
+
+	; Now run through the contents of the folder
+	Local $sFile, $hFile
+	While 1
+		; Get next match
+		$sFile = FileFindNextFile( $hSearch )
+		; If no more files then close search handle and return
+		If @error Then ExitLoop ; This is where we break the recursive loop <<<<<<<<<<<<<<<<<<<<<<<<<<
+
+		; Check if a folder
+		If @extended Then
+			; If so then call the function recursively
+			ListFiles_ToTreeView( $sSourceFolder & $sFile, _GUICtrlTreeView_AddChild( $TreeView1, $hItem, $sFile ) )
+		Else
+			; If a file than write path and name
+			$hFile = _GUICtrlTreeView_AddChild( $TreeView1, $hItem, $sFile )
+			If $oDict.Exists( $sFile ) Then
+				; File exists in another folder
+				; Set second, third, ... files red
+				While $hFile
+					_GUICtrlTreeView_SetItemParam( $TreeView1, $hFile, 1 ) ; Red
+					$hFile = _GUICtrlTreeView_GetParentHandle( $TreeView1, $hFile )
+				WEnd
+				If $oDict( $sFile ) Then
+					; Set first file red
+					$hFile = $oDict( $sFile )
+					While $hFile
+						_GUICtrlTreeView_SetItemParam( $TreeView1, $hFile, 1 ) ; Red
+						$hFile = _GUICtrlTreeView_GetParentHandle( $TreeView1, $hFile )
+					WEnd
+					$oDict( $sFile ) = 0 ; Set first file red only once
+				EndIf
+			Else
+				$oDict( $sFile ) = $hFile ; To be able to set first file red
+			EndIf
+		EndIf
+	WEnd
+
+	; Close search handle
+	FileClose( $hSearch )
+EndFunc
