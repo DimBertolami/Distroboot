@@ -1,7 +1,7 @@
 Ubuntu Desktop,https://releases.ubuntu.com/24.04.1/ubuntu-24.04.1-desktop-amd64.iso,6203355136
 Ubuntu Server,https://releases.ubuntu.com/24.04.1/ubuntu-24.04.1-live-server-amd64.iso,2773874688
 AlienOS,https://sourceforge.net/projects/alien-os-nano/files/Alien-OS%20Regolith/Alien-OS_Regolith_Prime.iso,4167041024
-Damn Small Linux (DSL),https://damnsmalllinux.org/download/dsl-2024.rc7.iso,717934592
+DamnSmallLinux,https://damnsmalllinux.org/download/dsl-2024.rc7.iso,717934592
 Endian Firewall,https://sourceforge.net/projects/efw/files/latest/download,376438784
 MX Linux(Xfce),https://sourceforge.net/projects/mx-linux/files/latest/download,2324692992
 EndeavourOs Neo,https://mirror.alpix.eu/endeavouros/iso/EndeavourOS_Endeavour_neo-2024.09.22.iso,2760355840
@@ -45,3 +45,9 @@ TileOS,https://downloads.tile-os.com/stable/sway/tileos-sway-1.2-desktop-amd64.i
 BlueFinOS,https://download.projectbluefin.io/bluefin-stable.iso,6163005440
 PearlLinux,https://sourceforge.net/projects/pearl-linux-mate-12/files/latest/download,4422893568
 LocOs,https://sourceforge.net/projects/loc-os/files/Loc-OS%2023/Loc-OS-23-XFCE-x86_64.iso/download,1280491520
+Lubuntu,https://cdimage.ubuntu.com/lubuntu/releases/24.04.1/release/lubuntu-24.04.1-desktop-amd64.iso,
+Xubuntu,https://nl.archive.ubuntu.com/ubuntu-cdimage-xubuntu/releases/24.04/release/xubuntu-24.04.1-desktop-amd64.iso,
+UbuntuMate,https://cdimage.ubuntu.com/ubuntu-mate/releases/noble/release/ubuntu-mate-24.04.1-desktop-amd64.iso,
+Zenwalk,http://download.zenwalk.org/x86_64/current/zenwalk-current-241227.iso,
+LingmoOs,https://sourceforge.net/projects/lingmo-os/files/latest/download,
+TucanaLinux,https://ftp2.osuosl.org/pub/tucana-linux/stable/iso/tucana-3.1-gnome.iso,
