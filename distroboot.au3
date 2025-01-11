@@ -35,9 +35,6 @@ EndIf
 #Region ### START Koda GUI section ### Form=c:\scripts\autoit\distroboot.kxf
 Global $Form1_1 = GUICreate("Distr0 Select0r", 490, 323, 192, 124)
 GUISetOnEvent($GUI_EVENT_CLOSE, "Form1_1Close")
-GUISetOnEvent($GUI_EVENT_MINIMIZE, "Form1_1Minimize")
-GUISetOnEvent($GUI_EVENT_MAXIMIZE, "Form1_1Maximize")
-GUISetOnEvent($GUI_EVENT_RESTORE, "Form1_1Restore")
 $AddDistro = GUICtrlCreateButton("&Add ISO Image", 0, 8, 83, 89)
 GUICtrlSetOnEvent($AddDistro, "AddDistroClick")
 $RemoveDistro = GUICtrlCreateButton("&Remove ISO Image", 88, 8, 107, 89)
@@ -54,8 +51,11 @@ GUICtrlSetOnEvent($Download, "DownloadClick")
 $TreeView1 = GUICtrlCreateTreeView(2, 99, 487, 225, _
 						BitOR($GUI_SS_DEFAULT_TREEVIEW,$TVS_TRACKSELECT,$TVS_INFOTIP, _
 						$WS_VSCROLL,$WS_BORDER), BitOR($WS_EX_CLIENTEDGE,$WS_EX_STATICEDGE, $WS_EX_TRANSPARENT))
-GUICtrlSetBkColor($TreeView1, $COLOR_LIGHTSKYBLUE)
+;GUICtrlSetBkColor($TreeView1, $COLOR_GOLD)
 GUICtrlSetFont($TreeView1, 10, $FW_HEAVY)
+_GUICtrlTreeView_SetBkColor($TreeView1, $COLOR_GOLD)
+_GUICtrlTreeView_SetTextColor($TreeView1, $COLOR_DEEPPINK)
+_GUICtrlTreeView_SetLineColor($TreeView1, $COLOR_GREENYELLOW)
 $Update_distrolist = GUICtrlCreateButton("&Update distrolist", 392, 72, 91, 25)
 GUICtrlSetOnEvent($Update_distrolist, "Update_distrolist")
 $QemuRun = GUICtrlCreateButton("run in &Qemu VM", 392, 32, 91, 41)
@@ -97,32 +97,6 @@ WEnd
 Func AddDistroClick()
 EndFunc
 
-Func Checkbox1Click()
-	$counter += 1
-	Switch $counter
-		Case 1
-			ConsoleWriter("You clicked the checkbox")
-		Case 2
-			ConsoleWriter("you clicked again....")
-		Case 3
-			ConsoleWriter("don't do it again....")
-		Case 4
-			ConsoleWriter("I warned you...")
-			;Run('shutdown -r -t 60 -c "60 seconds till your doom m0f0"')
-			Exit
-	EndSwitch
-
-EndFunc
-
-Func Form1_1Maximize()
-EndFunc
-
-Func Form1_1Minimize()
-EndFunc
-
-Func Form1_1Restore()
-EndFunc
-
 Func RemoveDistroClick()
 EndFunc
 
@@ -137,41 +111,54 @@ Func GetISOFolder()
 EndFunc
 
 Func FindFiles($sSearchStr)
+	Local 		 $aDistros
 	$fISO = GetISOFolder()
-	local $hSearch = FileFindFirstFile($fISO & $sSearchStr)
+	local $hSearch = FileFindFirstFile($fISO & "*" & $sSearchStr)
+	$lines = _FileCountLines ( @ScriptDir & "\distrolist.csv" )
 	While 1
         $sFileName = FileFindNextFile($hSearch)
 		If @error Then ExitLoop
-		 ConsoleWriter(_Now & ": " & $sFileName & $sSearchStr)
+		ConsoleWriter(_Now & ": iso image found " & $sFileName & $sSearchStr)
+		For $i = 1 To $lines Step 1
+			If not FileExists($fISO & $sFileName & $sSearchStr) Then
+				GUICtrlCreateTreeViewItem($i & ") " & $sFileName, $TreeView1)
+			Else
+				ConsoleWrite($fISO & $sFileName & $sSearchStr & @CRLF)
+				GUICtrlSetState(GUICtrlCreateTreeViewItem($i & ") " & $sFileName, $TreeView1), $GUI_DEFBUTTON)
+				;_GUICtrlTreeView_SetBold($TreeView1, -1)
+			EndIf
+		Next
 	WEnd
 EndFunc
 
 Func ScanISOsClick()
-	$fISO = GetISOFolder()
+;	$fISO = GetISOFolder()
 	DeleteAllTVItems()
-	FindFiles("*.iso")
-	FindFiles("*.img")
-	Local $hSearch3 = FileFindFirstFile($fISO & "*.zip")
-	while 1
-		$sFileName = FileFindNextFile($hSearch3)
-		If @error Then ExitLoop
-		 ConsoleWriter(_Now & ": " & $sFileName & "*.zip")
-	WEnd
-;	ConsoleWrite(@CRLF)
+	FindFiles(".iso")
+	FindFiles(".img")
 EndFunc
 
 Func DownloadClick()
 	$fISO = GetISOFolder()
 	$sFilePath = _WinAPI_GetTempFileName(@TempDir)
+
+;	$lines = _FileCountLines ( @ScriptDir & "\distrolist.csv" )
+	$lines = _GUICtrlTreeView_GetCount($TreeView1)
 	local $tmp = GUICtrlRead($TreeView1, 1)
 	$aTmp = StringSplit($tmp,")")
 	$tmp = StringStripWS($aTmp[2], $STR_STRIPLEADING + $STR_STRIPTRAILING)
-	$firstTreeviewItem = _GUICtrlTreeView_GetFirstItem ($TreeView1)
-	For $i = 1 To UBound($arrColors) Step 1
-		_GUICtrlTreeView_SetLineColor($firstTreeviewItem, $arrColors[$i-1])
-	Next
 
-	$lines = _FileCountLines ( @ScriptDir & "\distrolist.csv" )
+	_GUICtrlTreeView_BeginUpdate($TreeView1)
+	$firstTreeviewItem = _GUICtrlTreeView_GetFirstItem ($TreeView1)
+	For $i = 1 To $lines Step 1
+		$colorcode = $arrColors[$i]
+		$nextTreeItem = _GUICtrlTreeView_GetNext($TreeView1, $firstTreeviewItem)
+		_GUICtrlTreeView_ClickItem($TreeView1, $nextTreeItem)
+		_GUICtrlTreeView_SetBkColor($TreeView1, $COLOR_GOLD)
+		_GUICtrlTreeView_SetTextColor($TreeView1, $COLOR_DEEPPINK)
+		_GUICtrlTreeView_SetLineColor($TreeView1, $COLOR_DEEPPINK)
+	Next
+	_GUICtrlTreeView_EndUpdate($TreeView1)
 	For $i = 1 To $lines Step 1
 		$line = FileReadLine(@ScriptDir & "\distrolist.csv", $i)
 		$arrLineSplit = StringSplit($line, ",", 2)
@@ -180,21 +167,22 @@ Func DownloadClick()
 			$Url = $arrLineSplit[1]
 			$sSize = round($arrLineSplit[2]/1024/1024)
 			$Download = InetGet($Url, $sFilePath, $INET_BINARYTRANSFER, $INET_DOWNLOADBACKGROUND)
-;			ConsoleWriter("downloading " & $Name)
+			ConsoleWriter("downloading " & $Name)
 			ProgressOn(" Downloading " & $Name & ".iso", "0%", "", -1, -1, BitOR($DLG_NOTONTOP, $DLG_MOVEABLE))
 			Do
 				$i = round(InetGetInfo($Download, $INET_DOWNLOADREAD)/1024/2024) / round($arrLineSplit[2]/1024/2024) * 100
 				$i = Round($i)
-				ProgressSet($i, "Progress (" & round(InetGetInfo($Download, $INET_DOWNLOADREAD)/1024/2024)*2 & " / " & $sSize & "MB)", $i & "%")
-;				ConsoleWriter("Downloaded (" & round(InetGetInfo($Download, $INET_DOWNLOADREAD)/1024/2024)*2 & " / " & $sSize & "MB)")
+				ProgressSet($i & " testing...", "Progress (" & round(InetGetInfo($Download, $INET_DOWNLOADREAD)/1024/2024)*2 & " / " & $sSize & "MB)", $i & "%")
+				ConsoleWriter("Downloaded (" & round(InetGetInfo($Download, $INET_DOWNLOADREAD)/1024/2024)*2 & " / " & $sSize & "MB)")
 				Sleep(200)
+				GUISetState(@SW_SHOW)
 			Until InetGetInfo($Download, $INET_DOWNLOADCOMPLETE)
 			InetClose($Download)
 			FileMove($sFilePath, $fISO & $Name & ".iso", $FC_OVERWRITE + $FC_CREATEPATH)
 			ProgressSet(100, "Done", "Complete")
 			Sleep(2000)
 			ProgressOff()
-;			ConsoleWriter("Done")
+			ConsoleWriter("Done")
 		EndIf
 	Next
 EndFunc
@@ -204,6 +192,7 @@ Func Form1_1Close()
 EndFunc
 
 Func Update_distrolist()
+	$fISO = GetISOFolder()
 	GUICtrlSetState($r4Gb, $GUI_CHECKED)
 	GUISetBkColor($COLOR_LIGHTSTEELBLUE, $Form1_1)
 	GUICtrlSetColor($TreeView1, $COLOR_PURPLE)
@@ -219,6 +208,8 @@ Func Update_distrolist()
 		$sSize = $arrLineSplit[3]
 		$sSize = Round($sSize/1024/1024)
 		GUICtrlCreateTreeViewItem($i & ") " & $Name, $TreeView1)
+		; if also in iso folder change to bold or change color
+		If FileExists($fISO & $Name & ".iso") = 1 Then
 	Next
 EndFunc
 
@@ -227,17 +218,15 @@ Func QemuRunClick()
 	If Not FileExists("C:\Progra~1\qemu\qemu-system-x86_64.exe") Then execCommand('powershell -command "winget install qemu"')
 	Local $tselected = GUICtrlRead($TreeView1, 1)
 	If $tselected = 0 Then
-		ConsoleWriter("no linux distribution (distro) selected")
+		ConsoleWriter("nothing selected")
 	Else
 		$aSelected = StringSplit($tselected, ")")
 		$tselected = StringStripWS($aSelected[2],  $STR_STRIPLEADING + $STR_STRIPTRAILING)
 		Select
 			Case FileExists($fISO & $tselected & ".iso") <> 0
-				;execCommand('cd \Progra~1\qemu\ & "qemu-system-x86_64.exe" -cdrom "' & $fISO & $tselected & '.iso" -m 4G -full-screen')
-				execCommand('cd \Progra~1\qemu\ & "qemu-system-x86_64.exe" -cdrom "' & $fISO & $tselected & '.iso" -m 4G -full-screen')
+				execCommand('"qemu-system-x86_64.exe" -cdrom "' & $fISO & $tselected & '.iso" -m 4G -full-screen')
 			Case FileExists($fISO & $tselected & ".img") <> 0
-				execCommand('cd \Progra~1\qemu\ & "qemu-system-x86_64.exe" -m 4G -drive file="' & $fISO & $tselected & _
-							'.img",format=raw,index=0,media=disk -vga virtio -no-reboot -full-screen')
+				execCommand('"qemu-system-x86_64.exe" -m 4G -drive file="' & $fISO & $tselected & '.img",format=raw,index=0,media=disk -vga virtio -no-reboot -full-screen')
 			Case FileExists($fISO & $tselected & ".zip") <> 0
 				execCommand('PowerShell -Command "Expand-Archive -Path "' & $fISO & $tselected & '.zip" -DestinationPath ' & $fISO & ' -Force"')
 				FileDelete($fISO & $tselected & ".zip")
@@ -246,9 +235,8 @@ Func QemuRunClick()
 EndFunc
 
 Func execCommand($cmd)
-
-	RunWait(@comspec & " /c set path=%path%;\Progra~1\qemu\" & $cmd, "C:\Progra~1\qemu\", @SW_SHOW)
 	ConsoleWriter($cmd)
+	return RunWait(@comspec & ' /c set path=%path%;c:\Progra~1\qemu\ & ' & $cmd, "C:\Progra~1\qemu\", @SW_HIDE)
 EndFunc
 
 Func ConsoleWriter($cmd)
@@ -257,7 +245,6 @@ Func ConsoleWriter($cmd)
 	For $i = 1 To $lineLenght Step 1
 		$stringline &= "-"
 	Next
-	ConsoleWrite('!(' & @ScriptLineNumber & ')' & @CRLF & @TAB & $stringline & @CRLF & @TAB & "|| " & $cmd & " ||" & @CRLF & @TAB & $stringline & @CRLF & '>Error code: ' & @error & @CRLF)
 	LogLine($cmd)
 EndFunc
 
@@ -267,16 +254,17 @@ Func DeleteAllTVItems()
 	Do
 		$deleteTreelist = _GUICtrlTreeView_GetItemParam($TreeView1, $hParentItem)
 		$hParentItem = _GUICtrlTreeView_GetNextSibling($TreeView1, $hParentItem)
-		;GUICtrlSetOnEvent($deleteTreelist, "") ;unregister event
 	Until $hParentItem = 0
 	GUICtrlSendMsg($TreeView1, $TVM_DELETEITEM, $TVI_ROOT, 0)
 	_GUICtrlTreeView_EndUpdate($TreeView1)
-	LogLine("Distro list purged")
+	ConsoleWriter("Distro list purged")
 EndFunc ;==>DeleteAll
 
 func LogLine($sLine)
-	local $log = FileOpen(@ScriptDir & "\activity.log", $FO_APPEND)
-	FileWriteLine($log, _Now() & ": " & $sLine)
-	FileClose($log)
+	If $sLine <> "" Then
+		local $log = FileOpen(@ScriptDir & "\activity.log", $FO_APPEND)
+		FileWriteLine($log, _Now() & ": " & $sLine)
+		FileClose($log)
+	EndIf
 EndFunc
 
