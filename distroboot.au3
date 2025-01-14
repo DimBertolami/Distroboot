@@ -277,7 +277,7 @@ EndFunc   ;==>getIOStats
 Func execCommand($cmd)
 	$fISO = GetISOFolder()
 	ConsoleWriter($cmd)
-	RunWait(@ComSpec & ' /k color 9e & echo ' & $cmd, $fISO, @SW_SHOW)
+	RunWait(@ComSpec & ' /k color 9e & ' & $cmd, $fISO, @SW_HIDE)
 EndFunc   ;==>execCommand
 
 Func ConsoleWriter($cmd)
